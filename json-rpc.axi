@@ -14,7 +14,7 @@ define_function char[JSON_MAX_VALUE_DATA_LENGTH] jsonRpcRequestObjParams(char me
 	char tempMethod[JSON_MAX_VALUE_DATA_LENGTH];
 	char tempId[JSON_MAX_VALUE_DATA_LENGTH];
 	integer i;
-	
+
 	for(i=1; i<=length_string(method); i++) {
 		if(method[i] == '"' && (i==1)) {
 			tempMethod = "tempMethod,'\"'";
@@ -26,8 +26,8 @@ define_function char[JSON_MAX_VALUE_DATA_LENGTH] jsonRpcRequestObjParams(char me
 			tempMethod = "tempMethod,method[i]";
 		}
 	}
-	
-	
+
+
 	for(i=1; i<=length_string(id); i++) {
 		if(id[i] == '"' && (i==1)) {
 			tempId = "tempId,'\"'";
@@ -39,7 +39,7 @@ define_function char[JSON_MAX_VALUE_DATA_LENGTH] jsonRpcRequestObjParams(char me
 			tempId = "tempId,id[i]";
 		}
 	}
-	
+
 	if(id == '') {
 		return "'{"jsonrpc":"2.0","method":',tempMethod,',"params":',jsonStringifyObject(jObj),'}'";
 	}
@@ -52,7 +52,7 @@ define_function char[JSON_MAX_VALUE_DATA_LENGTH] jsonRpcRequestArrayParams(char 
 	char tempMethod[JSON_MAX_VALUE_DATA_LENGTH];
 	char tempId[JSON_MAX_VALUE_DATA_LENGTH];
 	integer i;
-	
+
 	for(i=1; i<=length_string(method); i++) {
 		if(method[i] == '"' && (i==1)) {
 			tempMethod = "tempMethod,'\"'";
@@ -64,8 +64,8 @@ define_function char[JSON_MAX_VALUE_DATA_LENGTH] jsonRpcRequestArrayParams(char 
 			tempMethod = "tempMethod,method[i]";
 		}
 	}
-	
-	
+
+
 	for(i=1; i<=length_string(id); i++) {
 		if(id[i] == '"' && (i==1)) {
 			tempId = "tempId,'\"'";
@@ -77,7 +77,7 @@ define_function char[JSON_MAX_VALUE_DATA_LENGTH] jsonRpcRequestArrayParams(char 
 			tempId = "tempId,id[i]";
 		}
 	}
-	
+
 	if(id == '') {
 		return "'{"jsonrpc":"2.0","method":',tempMethod,',"params":',jsonStringifyArray(jArr),'}'";
 	}
