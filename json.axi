@@ -3,14 +3,19 @@ program_name='json'
 
 #IF_NOT_DEFINED __JSON__
 #DEFINE __JSON__
+INCLUDE 'CustomFunctions'
 
 
 define_constant
 
 integer JSON_MAX_VALUE_NAME_LENGTH  = 200;
 integer JSON_MAX_VALUE_DATA_LENGTH = 65535;
+#IF_NOT_DEFINED JSON_MAX_OBJECT_VALUES
 integer JSON_MAX_OBJECT_VALUES = 100;
+#END_IF
+#IF_NOT_DEFINED JSON_MAX_ARRAY_VALUES
 integer JSON_MAX_ARRAY_VALUES = 100;
+#END_IF
 
 char JSON_TYPE_ARRAY[]   = 'array';
 char JSON_TYPE_BOOLEAN[] = 'boolean';
@@ -48,7 +53,7 @@ struct JsonToken {
 }
 
 struct JsonPair {
-    char name[JSON_MAX_VALUE_NAME_LENGTH];
+	char name[JSON_MAX_VALUE_NAME_LENGTH];
 	JsonToken jToken;
 }
 
@@ -63,56 +68,56 @@ struct JsonArray {
 
 define_function integer jsonObjHasOwnProperty(JsonObj jObj, char name[]) {
 	integer i;
-	
+
 	for(i=1; i<=length_array(jObj.pairs); i++) {
 		if(jObj.pairs[i].name == name) {
 			return true;
 		}
 	}
-	
+
 	return false;
 }
 
 define_function char[JSON_MAX_VALUE_DATA_LENGTH] jsonObjGet(JsonObj jObj, char name[]) {
 	integer i;
-	
+
 	for(i=1; i<=length_array(jObj.pairs); i++) {
 		if(jObj.pairs[i].name == name) {
 			return jObj.pairs[i].jToken.value;
 		}
 	}
-	
+
 	return '';
 }
 
 define_function char[7] jsonObjGetType(JsonObj jObj, char name[]) {
 	integer i;
-	
+
 	for(i=1; i<=length_array(jObj.pairs); i++) {
 		if(jObj.pairs[i].name == name) {
 			return jObj.pairs[i].jToken.type;
 		}
 	}
-	
+
 	return '';
 }
 
 define_function integer jsonArrayGet(JsonArray jArray,integer index,JsonToken jToken) {
 	integer i;
-	
+
 	if((index == 0) || (index > length_array(jArray.elements))) {
 		return false;
 	}
-	
+
 	jToken.type = jArray.elements[index].type;
 	jToken.value = jArray.elements[index].value;
-	
+
 	return true;
 }
 
 define_function jsonObjGetValues(JsonObj jObj, char values[JSON_MAX_OBJECT_VALUES][]) {
 	integer i;
-	
+
 	for(i=1; i<=length_array(jObj.pairs); i++) {
 		values[i] = jObj.pairs[i].jToken.value;
 	}
@@ -121,7 +126,7 @@ define_function jsonObjGetValues(JsonObj jObj, char values[JSON_MAX_OBJECT_VALUE
 
 define_function jsonObjGetTypes(JsonObj jObj, char types[JSON_MAX_OBJECT_VALUES][]) {
 	integer i;
-	
+
 	for(i=1; i<=length_array(jObj.pairs); i++) {
 		types[i] = jObj.pairs[i].jToken.value;
 	}
@@ -130,7 +135,7 @@ define_function jsonObjGetTypes(JsonObj jObj, char types[JSON_MAX_OBJECT_VALUES]
 
 define_function jsonObjGetNames(JsonObj jObj, char names[JSON_MAX_OBJECT_VALUES][]) {
 	integer i;
-	
+
 	for(i=1; i<=length_array(jObj.pairs); i++) {
 		names[i] = jObj.pairs[i].name;
 	}
@@ -139,7 +144,7 @@ define_function jsonObjGetNames(JsonObj jObj, char names[JSON_MAX_OBJECT_VALUES]
 
 define_function jsonArrayGetValues(JsonArray jArr, char values[JSON_MAX_OBJECT_VALUES][]) {
 	integer i;
-	
+
 	for(i=1; i<=length_array(jArr.elements); i++) {
 		values[i] = jArr.elements[i].value;
 	}
@@ -148,7 +153,7 @@ define_function jsonArrayGetValues(JsonArray jArr, char values[JSON_MAX_OBJECT_V
 
 define_function jsonArrayGetTypes(JsonArray jArr, char types[JSON_MAX_OBJECT_VALUES][]) {
 	integer i;
-	
+
 	for(i=1; i<=length_array(jArr.elements); i++) {
 		types[i] = jArr.elements[i].type;
 	}
@@ -192,9 +197,9 @@ define_function char[JSON_MAX_VALUE_DATA_LENGTH] jsonStringifyValue(JsonToken jT
 define_function char[JSON_MAX_VALUE_DATA_LENGTH] jsonStringifyArray(JsonArray jArr) {
 	char arrStr[JSON_MAX_VALUE_DATA_LENGTH];
 	integer i;
-	
+
 	arrStr = '[';
-	
+
 	for(i=1; i<=length_array(jArr.elements); i++) {
 		if(i == length_array(jArr.elements)) {
 			arrStr = "arrStr,jsonStringifyValue(jArr.elements[i])";
@@ -203,18 +208,18 @@ define_function char[JSON_MAX_VALUE_DATA_LENGTH] jsonStringifyArray(JsonArray jA
 			arrStr = "arrStr,jsonStringifyValue(jArr.elements[i]),','";
 		}
 	}
-	
+
 	arrStr = "arrStr,']'"
-	
+
 	return arrStr;
 }
 
 define_function char[JSON_MAX_VALUE_DATA_LENGTH] jsonStringifyObject(JsonObj jObj) {
 	char objStr[JSON_MAX_VALUE_DATA_LENGTH];
 	integer i;
-	
+
 	objStr = '{';
-	
+
 	for(i=1; i<=length_array(jObj.pairs); i++) {
 		if(i == length_array(jObj.pairs)) {
 			objStr = "objStr,'"',jObj.pairs[i].name,'":',jsonStringifyValue(jObj.pairs[i].jToken)";
@@ -223,9 +228,9 @@ define_function char[JSON_MAX_VALUE_DATA_LENGTH] jsonStringifyObject(JsonObj jOb
 			objStr = "objStr,'"',jObj.pairs[i].name,'":',jsonStringifyValue(jObj.pairs[i].jToken),','";
 		}
 	}
-	
+
 	objStr = "objStr,'}'"
-	
+
 	return objStr;
 }
 
@@ -265,13 +270,14 @@ define_function integer jsonParseArray(char jsonArrayStr[], JsonArray jArr) {
 	char tempJson[JSON_MAX_VALUE_DATA_LENGTH];
 	integer invalidJson;
 	integer i, j;
-	
+
 	tempJson = jsonRemoveWhiteSpace(jsonArrayStr);
-	
+	AMX_LOG_LONG_STRING(AMX_DEBUG,"'json::jsonParseArray: ',tempJson");
+
 	if(length_string(jsonArrayStr) < 2) {
 		return false;
 	}
-	
+
 	if(tempJson[1] == '[' && tempJson[length_string(tempJson)] == ']') {
 		if((length_string(tempJson) == 2) && (tempJson[1] == '[') && (tempJson[2] == ']')) { // empty object
 			set_length_array(jArr.elements,0);
@@ -285,7 +291,7 @@ define_function integer jsonParseArray(char jsonArrayStr[], JsonArray jArr) {
 	else {
 		return false;
 	}
-	
+
 	for(i=1; i<=max_length_array(jArr.elements); i++) {
 		if(find_string(tempJson,'true',1) == 1) { // boolean true
 			jArr.elements[i].type = JSON_TYPE_BOOLEAN;
@@ -303,12 +309,12 @@ define_function integer jsonParseArray(char jsonArrayStr[], JsonArray jArr) {
 			remove_string(tempJson,"'null'",1);
 		}
 		else if(tempJson[1] == '"') { // string
-			integer foundClosingSquareBracket;
-			
+			integer foundClosingDoubleQuotes;
+
 			j=2;
 			while(j<=length_string(tempJson)) {
 				if((tempJson[j] == '"') && (tempJson[j-1] != '\')) {
-					foundClosingSquareBracket = true;
+					foundClosingDoubleQuotes = true;
 					jArr.elements[i].type = JSON_TYPE_STRING;
 					jArr.elements[i].value = mid_string(tempJson,2,j-2);
 					remove_string(tempJson,"'"',jArr.elements[i].value,'"'",1);
@@ -316,9 +322,9 @@ define_function integer jsonParseArray(char jsonArrayStr[], JsonArray jArr) {
 				}
 				j++;
 			}
-			
-			if(!foundClosingSquareBracket) {
-				AMX_LOG(AMX_DEBUG,'json::jsonParseObj:Invalid JSON - no closing ]');
+
+			if(!foundClosingDoubleQuotes) {
+				AMX_LOG(AMX_DEBUG,'json::jsonParseArray:Invalid JSON - no closing "');
 				invalidJson = true;
 				break;
 			}
@@ -352,7 +358,7 @@ define_function integer jsonParseArray(char jsonArrayStr[], JsonArray jArr) {
 			       tempJson[j] == 'E' ||
 			       tempJson[j] == '-' ||
 			       tempJson[j] == '+')) {
-				
+
 				jArr.elements[i].value = "jArr.elements[i].value,tempJson[j]";
 				j++;
 			}
@@ -363,10 +369,10 @@ define_function integer jsonParseArray(char jsonArrayStr[], JsonArray jArr) {
 			integer insideString
 			integer unmatchedOpenSquareBrackets;
 			integer foundClosingSquareBracket;
-			
+
 			j = 2;
 			while(j<=length_string(tempJson)) {
-			
+
 				if(tempJson[j] == '"') {
 					if(!insideString) {
 						insideString = true;
@@ -375,13 +381,13 @@ define_function integer jsonParseArray(char jsonArrayStr[], JsonArray jArr) {
 						insideString = false;
 					}
 				}
-			
+
 				if(!insideString) {
 					if(tempJson[j] == '[') {
 						unmatchedOpenSquareBrackets++;
 					}
 					else if(tempJson[j] == ']') {
-					
+
 						if(unmatchedOpenSquareBrackets) {
 							unmatchedOpenSquareBrackets--;
 						}
@@ -396,9 +402,9 @@ define_function integer jsonParseArray(char jsonArrayStr[], JsonArray jArr) {
 				}
 				j++;
 			}
-			
+
 			if(!foundClosingSquareBracket) {
-				AMX_LOG(AMX_DEBUG,'json::jsonParseObj:Invalid JSON - no closing ]');
+				AMX_LOG(AMX_DEBUG,'json::jsonParseArray:Invalid JSON - no closing ]');
 				invalidJson = true;
 				break;
 			}
@@ -408,10 +414,10 @@ define_function integer jsonParseArray(char jsonArrayStr[], JsonArray jArr) {
 			integer insideString
 			integer unmatchedOpenBraces;
 			integer foundClosingCurlyBrace;
-			
+
 			j = 2;
 			while(j<=length_string(tempJson)) {
-			
+
 				if(tempJson[j] == '"') {
 					if(!insideString) {
 						insideString = true;
@@ -420,13 +426,13 @@ define_function integer jsonParseArray(char jsonArrayStr[], JsonArray jArr) {
 						insideString = false;
 					}
 				}
-			
+
 				if(!insideString) {
 					if(tempJson[j] == '{') {
 						unmatchedOpenBraces++;
 					}
 					else if(tempJson[j] == '}') {
-					
+
 						if(unmatchedOpenBraces) {
 							unmatchedOpenBraces--;
 						}
@@ -441,9 +447,9 @@ define_function integer jsonParseArray(char jsonArrayStr[], JsonArray jArr) {
 				}
 				j++;
 			}
-			
+
 			if(!foundClosingCurlyBrace) {
-				AMX_LOG(AMX_DEBUG,'json::jsonParseObj:Invalid JSON - no closing }');
+				AMX_LOG(AMX_DEBUG,'json::jsonParseArray:Invalid JSON - no closing }');
 				invalidJson = true;
 				break;
 			}
@@ -453,7 +459,7 @@ define_function integer jsonParseArray(char jsonArrayStr[], JsonArray jArr) {
 			invalidJson = true;
 			break;
 		}
-		
+
 		if(!length_string(tempJson)) { // no more data to process
 			break;
 		}
@@ -465,7 +471,7 @@ define_function integer jsonParseArray(char jsonArrayStr[], JsonArray jArr) {
 			break;
 		}
 	}
-	
+
 	if(invalidJson) {
 		return false;
 	}
@@ -473,22 +479,23 @@ define_function integer jsonParseArray(char jsonArrayStr[], JsonArray jArr) {
 		set_length_array(jArr.elements,i);
 		return true;
 	}
-	
+
 }
 
 define_function integer jsonParseObject(char jsonObjStr[], JsonObj jObj) {
 	char tempJson[JSON_MAX_VALUE_DATA_LENGTH];
 	char name[JSON_MAX_VALUE_NAME_LENGTH];
 	integer i;
-	
+
 	integer invalidJson;
-	
-	AMX_LOG(AMX_DEBUG,'json::jsonParseObj');
-	
-	AMX_LOG(AMX_DEBUG,"'json::jsonParseObj:Length of JSON string = ',itoa(length_array(jsonObjStr))");
-	
+
+	AMX_LOG(AMX_DEBUG,'json::jsonParseObject');
+
+	AMX_LOG(AMX_DEBUG,"'json::jsonParseObject:Length of JSON string = ',itoa(length_array(jsonObjStr))");
+
 	tempJson = jsonRemoveWhiteSpace(jsonObjStr);
-	
+	AMX_LOG_LONG_STRING(AMX_DEBUG,"'json::jsonParseObject: ',tempJson");
+
 	if(length_string(jsonObjStr) < 2) {
 		return false;
 	}
@@ -507,15 +514,15 @@ define_function integer jsonParseObject(char jsonObjStr[], JsonObj jObj) {
 		AMX_LOG(AMX_DEBUG,'json::jsonParseObj:Returning false - invalid object string');
 		return false;
 	}
-	
+
 	for(i=1; i<=max_length_array(jObj.pairs); i++) {
 		integer j;
-		
+
 		// get next name
 		name = remove_string(tempJson,'":',1);
 		name = mid_string(name,2,length_string(name)-3); // remove leading " and trailing ":
 		jObj.pairs[i].name = name;
-		
+
 		// get corresponding value
 		if(find_string(lower_string(tempJson),'true',1) == 1) { // boolean true
 			jObj.pairs[i].jToken.type = JSON_TYPE_BOOLEAN;
@@ -537,20 +544,20 @@ define_function integer jsonParseObject(char jsonObjStr[], JsonObj jObj) {
 		}
 		else if(tempJson[1] == '"') { // string
 			integer foundClosingQuote;
-			
+
 			j=2;
 			while(j<=length_string(tempJson)) {
 				if((tempJson[j] == '"') && (tempJson[j-1] != '\')) {
 					foundClosingQuote = true;
 					jObj.pairs[i].jToken.type = JSON_TYPE_STRING;
 					jObj.pairs[i].jToken.value = mid_string(tempJson,2,j-2);
-					AMX_LOG(AMX_DEBUG,"'json::jsonParseObj:[name: ',jObj.pairs[i].name,'][type: ',jObj.pairs[i].jToken.type,'][value: ',jObj.pairs[i].jToken.value,']'");
+					AMX_LOG_LONG_STRING(AMX_DEBUG,"'json::jsonParseObj:[name: ',jObj.pairs[i].name,'][type: ',jObj.pairs[i].jToken.type,'][value: ',jObj.pairs[i].jToken.value,']'");
 					remove_string(tempJson,"'"',jObj.pairs[i].jToken.value,'"'",1);
 					break;
 				}
 				j++;
 			}
-			
+
 			if(!foundClosingQuote) {
 				AMX_LOG(AMX_DEBUG,'json::jsonParseObj:Invalid JSON - no closing "');
 				invalidJson = true;
@@ -586,7 +593,7 @@ define_function integer jsonParseObject(char jsonObjStr[], JsonObj jObj) {
 			      tempJson[j] == 'E' ||
 			      tempJson[j] == '-' ||
 			      tempJson[j] == '+')) {
-				
+
 				jObj.pairs[i].jToken.value = "jObj.pairs[i].jToken.value,tempJson[j]";
 				j++;
 			}
@@ -598,10 +605,10 @@ define_function integer jsonParseObject(char jsonObjStr[], JsonObj jObj) {
 			integer insideString
 			integer unmatchedOpenSquareBrackets;
 			integer foundClosingSquareBracket;
-			
+
 			j = 2;
 			while(j<=length_string(tempJson)) {
-			
+
 				if(tempJson[j] == '"') {
 					if(!insideString) {
 						insideString = true;
@@ -610,13 +617,13 @@ define_function integer jsonParseObject(char jsonObjStr[], JsonObj jObj) {
 						insideString = false;
 					}
 				}
-			
+
 				if(!insideString) {
 					if(tempJson[j] == '[') {
 						unmatchedOpenSquareBrackets++;
 					}
 					else if(tempJson[j] == ']') {
-					
+
 						if(unmatchedOpenSquareBrackets) {
 							unmatchedOpenSquareBrackets--;
 						}
@@ -624,7 +631,7 @@ define_function integer jsonParseObject(char jsonObjStr[], JsonObj jObj) {
 							foundClosingSquareBracket = true;
 							jObj.pairs[i].jToken.type = JSON_TYPE_ARRAY;
 							jObj.pairs[i].jToken.value = mid_string(tempJson,1,j);   // includes enclosing brackets '[' and ']'
-							AMX_LOG(AMX_DEBUG,"'json::jsonParseObj:[name: ',jObj.pairs[i].name,'][type: ',jObj.pairs[i].jToken.type,'][value: ',jObj.pairs[i].jToken.value,']'");
+							AMX_LOG_LONG_STRING(AMX_DEBUG,"'json::jsonParseObj:[name: ',jObj.pairs[i].name,'][type: ',jObj.pairs[i].jToken.type,'][value: ',jObj.pairs[i].jToken.value,']'");
 							remove_string(tempJson,mid_string(tempJson,1,j),1);
 							break;
 						}
@@ -632,7 +639,7 @@ define_function integer jsonParseObject(char jsonObjStr[], JsonObj jObj) {
 				}
 				j++;
 			}
-			
+
 			if(!foundClosingSquareBracket) {
 				AMX_LOG(AMX_DEBUG,'json::jsonParseObj:Invalid JSON - no closing ]');
 				invalidJson = true;
@@ -644,7 +651,7 @@ define_function integer jsonParseObject(char jsonObjStr[], JsonObj jObj) {
 			integer insideString
 			integer unmatchedOpenBraces;
 			integer foundClosingCurlyBrace;
-			
+
 			j = 2;
 			while(j<=length_string(tempJson)) {
 				if(tempJson[j] == '"') {
@@ -655,13 +662,13 @@ define_function integer jsonParseObject(char jsonObjStr[], JsonObj jObj) {
 						insideString = false;
 					}
 				}
-				
+
 				if(!insideString) {
 					if(tempJson[j] == '{') {
 						unmatchedOpenBraces++;
 					}
 					else if(tempJson[j] == '}') {
-					
+
 						if(unmatchedOpenBraces) {
 							unmatchedOpenBraces--;
 						}
@@ -669,7 +676,7 @@ define_function integer jsonParseObject(char jsonObjStr[], JsonObj jObj) {
 							foundClosingCurlyBrace = true;
 							jObj.pairs[i].jToken.type = JSON_TYPE_OBJECT;
 							jObj.pairs[i].jToken.value = mid_string(tempJson,1,j);   // includes enclosing brackets '{' and '}'
-							AMX_LOG(AMX_DEBUG,"'json::jsonParseObj:[name: ',jObj.pairs[i].name,'][type: ',jObj.pairs[i].jToken.type,'][value: ',jObj.pairs[i].jToken.value,']'");
+							AMX_LOG_LONG_STRING(AMX_DEBUG,"'json::jsonParseObj:[name: ',jObj.pairs[i].name,'][type: ',jObj.pairs[i].jToken.type,'][value: ',jObj.pairs[i].jToken.value,']'");
 							remove_string(tempJson,mid_string(tempJson,1,j),1);
 							break;
 						}
@@ -677,7 +684,7 @@ define_function integer jsonParseObject(char jsonObjStr[], JsonObj jObj) {
 				}
 				j++;
 			}
-			
+
 			if(!foundClosingCurlyBrace) {
 				AMX_LOG(AMX_DEBUG,'json::jsonParseObj:Invalid JSON - no closing }');
 				invalidJson = true;
@@ -688,7 +695,7 @@ define_function integer jsonParseObject(char jsonObjStr[], JsonObj jObj) {
 			invalidJson = true;
 			break;
 		}
-		
+
 		if(!length_string(tempJson)) { // no more data to process
 			break;
 		}
@@ -700,7 +707,7 @@ define_function integer jsonParseObject(char jsonObjStr[], JsonObj jObj) {
 			break;
 		}
 	}
-	
+
 	if(invalidJson) {
 		AMX_LOG(AMX_ERROR,'json::jsonParseObj:Returning false - invalid JSON');
 		return false;
@@ -717,14 +724,14 @@ define_function char[50] jsonGet(char jsonSerialized[], char property[], JsonTok
 	char json[5000];
 	JsonObj jObj;
 	integer i;
-	
+
 	json = "jsonSerialized";
-	
+
 	if(!jsonParseObject(json, jObj))
 	{
 		return JSON_INVALID;
 	}
-	
+
 	for(i=1; i<=length_array(jObj.pairs); i++)
 	{
 		if(jObj.pairs[i].name == property)
@@ -734,7 +741,7 @@ define_function char[50] jsonGet(char jsonSerialized[], char property[], JsonTok
 			return jToken.type;
 		}
 	}
-	
+
 	return JSON_PROPERTY_NOT_FOUND;
 }
 
