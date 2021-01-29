@@ -2,17 +2,17 @@ PROGRAM_NAME='string'
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Include: string
-// 
+//
 // Description:
 //
 //   - This include file provides extra string operation functions not natively provided in NetLinx.
 //
 // Implementation:
 //
-//   - Any NetLinx program utilising the string include file must use either the INCLUDE or #INCLUDE keywords to 
-//     include the string include file within the program. While the INCLUDE and #INCLUDE keywords are both 
-//     functionally equivalent the #INCLUDE keyword is recommended only because it is the NetLinx keyword (the INCLUDE 
-//     keyword is from the earlier Axcess programming language and is included within the NetLinx programming language 
+//   - Any NetLinx program utilising the string include file must use either the INCLUDE or #INCLUDE keywords to
+//     include the string include file within the program. While the INCLUDE and #INCLUDE keywords are both
+//     functionally equivalent the #INCLUDE keyword is recommended only because it is the NetLinx keyword (the INCLUDE
+//     keyword is from the earlier Axcess programming language and is included within the NetLinx programming language
 //     for backwards compatibility).
 //
 //     E.g:
@@ -47,7 +47,7 @@ char NAK = $21;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: trim_string
 //
 // Parameters:
@@ -63,7 +63,7 @@ char NAK = $21;
 //    E.g:
 //      sAlphabet = 'abcdefghijlkmnopqrstuvwxyz'
 //      trim(sAlphabet,3,5)	// alphabet is now 'defghijlkmnopqrstu'
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function trim_string(char str[], integer ltrim, integer rtrim) {
 	if((ltrim+rtrim) >= length_string(str))
@@ -73,7 +73,7 @@ define_function trim_string(char str[], integer ltrim, integer rtrim) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: delete_string
 //
 // Parameters:
@@ -85,11 +85,11 @@ define_function trim_string(char str[], integer ltrim, integer rtrim) {
 //
 // Description:
 //    Searches a string for the first occurance of a defined substring and if found removes the first occurance of that
-//    substring from the search string and returns a true result. If the substring is not found a false result is 
+//    substring from the search string and returns a true result. If the substring is not found a false result is
 //    returned.
-//    Not to be confused with the REMOVE_STRING function which deletes everything up to and including the substring 
+//    Not to be confused with the REMOVE_STRING function which deletes everything up to and including the substring
 //    from the string being searched and then returns the deleted string.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function integer delete_string(char strSearch[], char strParse[]) {
 	stack_var integer indexParse;
@@ -98,7 +98,7 @@ define_function integer delete_string(char strSearch[], char strParse[]) {
 		return false;
 
 	indexParse = find_string(strSearch,strParse,1);
-	
+
 	if(!indexParse)
 		return false;
 
@@ -113,7 +113,7 @@ define_function integer delete_string(char strSearch[], char strParse[]) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: replace_string
 //
 // Parameters:
@@ -126,7 +126,7 @@ define_function integer delete_string(char strSearch[], char strParse[]) {
 //
 // Description:
 //    Searches a string for a substring and if found removes the substring and inserts a new string in place.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function integer replace_string(char strSearch[], char strToReplace[], char strReplacement[]) {
 	stack_var integer indexReplace;
@@ -151,7 +151,7 @@ define_function integer replace_string(char strSearch[], char strToReplace[], ch
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: append_string
 //
 // Parameters:
@@ -163,14 +163,14 @@ define_function integer replace_string(char strSearch[], char strToReplace[], ch
 //
 // Description:
 //    Appends one string onto another. Equivalent to string concatentation in NetLinx.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function append_string(char str[], char append[]) {
 	str = "str,append";
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: insert_string
 //
 // Parameters:
@@ -183,7 +183,7 @@ define_function append_string(char str[], char append[]) {
 //
 // Description:
 //    Inserts one string into another at the designated index.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function insert_string(char str[], integer index, char insert[]) {
 	if((index = 0) || (index == 1))
@@ -195,7 +195,7 @@ define_function insert_string(char str[], integer index, char insert[]) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: hex
 //
 // Parameters:
@@ -206,7 +206,7 @@ define_function insert_string(char str[], integer index, char insert[]) {
 //
 // Description:
 //    Returns an all uppercase hexidecimal formatted ASCII string representing the value of the data passed through.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function char[5000] hex(char data[]) {
 	char result[5000];

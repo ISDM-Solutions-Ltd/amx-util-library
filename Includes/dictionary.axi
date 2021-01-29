@@ -2,17 +2,17 @@ PROGRAM_NAME='dictionary'
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Include: dictionary
-// 
+//
 // Description:
 //
 //   - This include file provides structures and functions for keeping data in key/value pairs (i.e., a dictionary).
 //
 // Implementation:
 //
-//   - Any NetLinx program utilising the dictionary include file must use either the INCLUDE or #INCLUDE keywords to 
-//     include the dictionary include file within the program. While the INCLUDE and #INCLUDE keywords are both 
-//     functionally equivalent the #INCLUDE keyword is recommended only because it is the NetLinx keyword (the INCLUDE 
-//     keyword is from the earlier Axcess programming language and is included within the NetLinx programming language 
+//   - Any NetLinx program utilising the dictionary include file must use either the INCLUDE or #INCLUDE keywords to
+//     include the dictionary include file within the program. While the INCLUDE and #INCLUDE keywords are both
+//     functionally equivalent the #INCLUDE keyword is recommended only because it is the NetLinx keyword (the INCLUDE
+//     keyword is from the earlier Axcess programming language and is included within the NetLinx programming language
 //     for backwards compatibility).
 //
 //     E.g:
@@ -46,7 +46,7 @@ struct Dictionary {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: dictionaryAdd
 //
 // Parameters:
@@ -54,7 +54,7 @@ struct Dictionary {
 //    char key[]        -   A character array of undefined length containing a key to add to the dictionary.
 //
 // Returns:
-//    integer   -   An integer containing either true (1) or false(0) indicating successful addition of the key/val 
+//    integer   -   An integer containing either true (1) or false(0) indicating successful addition of the key/val
 //                  pair.
 //
 // Description:
@@ -62,7 +62,7 @@ struct Dictionary {
 //    key already exists the associated value is simply updated and a true (1) result is returned. Neither the key nor
 //    value can be empty or the process will be aborted and a false (0) result will be returned. A false (0) result
 //    will also be returned if the dictionary is already full or the key/val pair already exists within the dictionary.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DEFINE_FUNCTION integer dictionaryAdd (Dictionary dict, char key[], char val[]) {
 	stack_var integer idx;
@@ -71,7 +71,7 @@ DEFINE_FUNCTION integer dictionaryAdd (Dictionary dict, char key[], char val[]) 
 	   (val == '') || // empty value
 	   (dictionaryGetValue(dict,key) == val)) // same key/val already stored in dictionary
 		return false;
-	
+
 	idx = dictionaryGetIndex(dict, key);
 
 	if(idx) { // the key exists in the dictionary and since we already know it doesn't have the value we want to add we need to replace it
@@ -88,7 +88,7 @@ DEFINE_FUNCTION integer dictionaryAdd (Dictionary dict, char key[], char val[]) 
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: dictionaryRemove
 //
 // Parameters:
@@ -96,13 +96,13 @@ DEFINE_FUNCTION integer dictionaryAdd (Dictionary dict, char key[], char val[]) 
 //    char key[]        -   A character array of undefined length containing a key to search with.
 //
 // Returns:
-//    integer   -   An integer containing either true (1) or false(0) indicating successful removal of the key/val 
+//    integer   -   An integer containing either true (1) or false(0) indicating successful removal of the key/val
 //                  pair.
 //
 // Description:
 //    Searches the dictionary for a matching key and if found deletes the key and associated value from the dictionary
 //    and returns a true (1) result otherwise returns a false (0) result.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DEFINE_FUNCTION integer dictionaryRemove (Dictionary dict, char key[]) {
 	stack_var integer idx;
@@ -129,7 +129,7 @@ DEFINE_FUNCTION integer dictionaryRemove (Dictionary dict, char key[]) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: dictionaryGetValue
 //
 // Parameters:
@@ -140,9 +140,9 @@ DEFINE_FUNCTION integer dictionaryRemove (Dictionary dict, char key[]) {
 //    char[DICTIONARY_MAX_VAL_LENGTH]   -   A character array containing the value.
 //
 // Description:
-//    Searches the dictionary for a matching key and if found returns the associated value otherwise returns an empty 
+//    Searches the dictionary for a matching key and if found returns the associated value otherwise returns an empty
 //    string ('').
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DEFINE_FUNCTION char[DICTIONARY_MAX_VAL_LENGTH] dictionaryGetValue(Dictionary dict, char key[]) {
 	stack_var integer i;
@@ -157,7 +157,7 @@ DEFINE_FUNCTION char[DICTIONARY_MAX_VAL_LENGTH] dictionaryGetValue(Dictionary di
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: dictionaryGetValueIgnoreKeyCase
 //
 // Parameters:
@@ -173,7 +173,7 @@ DEFINE_FUNCTION char[DICTIONARY_MAX_VAL_LENGTH] dictionaryGetValue(Dictionary di
 //    Note: Because search is for a case-insensitive match and there may be multiple keys with the same spelling (but
 //          different case (e.g: 'KEYA', 'KeYa') the result will be the first key with matching spelling, regardless of
 //          case.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DEFINE_FUNCTION char[DICTIONARY_MAX_VAL_LENGTH] dictionaryGetValueIgnoreKeyCase(Dictionary dict, char key[]) {
 	stack_var integer i;
@@ -187,7 +187,7 @@ DEFINE_FUNCTION char[DICTIONARY_MAX_VAL_LENGTH] dictionaryGetValueIgnoreKeyCase(
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: dictionaryGetIndex
 //
 // Parameters:
@@ -199,7 +199,7 @@ DEFINE_FUNCTION char[DICTIONARY_MAX_VAL_LENGTH] dictionaryGetValueIgnoreKeyCase(
 //
 // Description:
 //    Searches the dictionary for a matching key and if found returns the index it is stored at otherwise returns 0.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DEFINE_FUNCTION integer dictionaryGetIndex(Dictionary dict, char key[]) {
 	stack_var integer i;
@@ -213,7 +213,7 @@ DEFINE_FUNCTION integer dictionaryGetIndex(Dictionary dict, char key[]) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: dictionaryClear
 //
 // Parameters:
@@ -224,7 +224,7 @@ DEFINE_FUNCTION integer dictionaryGetIndex(Dictionary dict, char key[]) {
 //
 // Description:
 //    Clears the dictionary of all key/val pairs
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DEFINE_FUNCTION dictionaryClear(Dictionary dict) {
 	stack_var integer i;
@@ -237,7 +237,7 @@ DEFINE_FUNCTION dictionaryClear(Dictionary dict) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: dictionaryCopy
 //
 // Parameters:
@@ -249,7 +249,7 @@ DEFINE_FUNCTION dictionaryClear(Dictionary dict) {
 //
 // Description:
 //    Copies one dictionary to another
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DEFINE_FUNCTION dictionaryCopy(Dictionary dictCopyFrom,Dictionary dictCopyTo) {
 	stack_var integer i;

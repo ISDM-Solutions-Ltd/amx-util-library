@@ -2,10 +2,10 @@ program_name='websockets'
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Include: websockets
-// 
+//
 // Description:
 //
-//   - This include file provides NetLinx management of client-side websockets as defined in RFC 6455 (see 
+//   - This include file provides NetLinx management of client-side websockets as defined in RFC 6455 (see
 //     https://tools.ietf.org/html/rfc6455).
 //
 //   - It provides functions to open/close websockets as well as send/receive data on websockets.
@@ -15,18 +15,18 @@ program_name='websockets'
 //   - Callback functions are provided to be implemented outside the include file by the "main" program. These
 //     callback functions will be triggered by this include file whenever an "event" occurs on a websocket.
 //
-//   - The websockets include file performs session tracking through cooking storage which may be useful in situations 
-//     where multiple WebSockets may need to be opened to a web server (i.e., one to authenticate and another to 
+//   - The websockets include file performs session tracking through cooking storage which may be useful in situations
+//     where multiple WebSockets may need to be opened to a web server (i.e., one to authenticate and another to
 //     communicate).
 //
 //   - The websockets include file manages the WebSockets ping/pong automatically to avoid connections going stale.
 //
 // Implementation:
 //
-//   - Any NetLinx program utilising the websockets include file must use either the INCLUDE or #INCLUDE keywords to 
-//     include the websockets include file within the program. While the INCLUDE and #INCLUDE keywords are both 
+//   - Any NetLinx program utilising the websockets include file must use either the INCLUDE or #INCLUDE keywords to
+//     include the websockets include file within the program. While the INCLUDE and #INCLUDE keywords are both
 //     functionally equivalent the #INCLUDE keyword is recommended only because it is the NetLinx keyword (the INCLUDE
-//     keyword is from the earlier Axcess programming language and is included within the NetLinx programming language 
+//     keyword is from the earlier Axcess programming language and is included within the NetLinx programming language
 //     for backwards compatibility).
 //
 //     E.g:
@@ -41,9 +41,9 @@ program_name='websockets'
 //
 //           socket:                  NetLinx socket device (e.g., 0:2:0)
 //           url:                     URL for the WebSocket to connect to (e.g: 'ws://echo.websocket.org')
-//           subprotocols (optional): Sub-protocol or list of protocols to communicate at an application level (e.g: 
+//           subprotocols (optional): Sub-protocol or list of protocols to communicate at an application level (e.g:
 //                                    'chat', 'chat superchat'). Can be empty string ''.
-//                                    The full list of registered WebSocket Subprotocols (as at time of writing) is 
+//                                    The full list of registered WebSocket Subprotocols (as at time of writing) is
 //                                    provided within the DEFINE_CONSTANT section of the websockets include file.
 //           sessionId (optional):    Session ID for tracking a session with a webserver. Can be empty string ''. The
 //                                    session ID is stored against the WebSocket and can get obtained at any time by
@@ -83,7 +83,7 @@ program_name='websockets'
 //     file when corresponding "events" trigger on the websocket.
 //
 //     The callback functions should not be edited within the websockets include file. Instead, the callback functions
-//     should be copied into the main program and then the code statements within the functions can be customised for 
+//     should be copied into the main program and then the code statements within the functions can be customised for
 //     the program. In this way, multiple NetLinx modules within the same program (or even different programs) can each
 //     make use of the websocket include file without having to make multiple versions of the websockets include file
 //     each with different code within the callback functions.
@@ -104,7 +104,7 @@ program_name='websockets'
 //        	send_string 0, "'webSocketOnClose(',itoa(webSocket.number),':',itoa(webSocket.port),':',itoa(webSocket.system),')'"
 //        }
 //        #END_IF
-// 
+//
 //     This callback function SHOULD be implemented in the outside program as follows:
 //
 //        DEFINE_PROGRAM 'Web Sockets Demo'
@@ -119,7 +119,7 @@ program_name='websockets'
 //     Implementing the callback function as shown above guarantees that the function defined with the outside program
 //     will be called instead of the unimplemented callback function defined within the websockets include file.
 //
-//   - Some webservers may require authentication via one websocket before another websocket can be opened for 
+//   - Some webservers may require authentication via one websocket before another websocket can be opened for
 //     communication. In these scenarios the "comm" websocket will need to maintain the same session with the webserver
 //     that was created for the "auth" websocket. When the "auth" websocket is initially establishing itself with the
 //     webserver a HTTP handshake (known as the WebSocket Open Handshake) is performed and the webserver will send
@@ -136,7 +136,7 @@ program_name='websockets'
 //        webSocketOpen(dvSocketAuth,'ws://test.server.org','','');
 //
 //     If the sessionId parameter was not empty when the WebSocketOpen function was called this value will be cached
-//     against the websocket in the websockets include file and sent to the webserver in the 'Cookie' header field of 
+//     against the websocket in the websockets include file and sent to the webserver in the 'Cookie' header field of
 //     the HTTP GET request.
 //
 //     E.g:
@@ -341,7 +341,7 @@ define_function webSocketOnOpen(dev socket) {
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: webSocketOpen
 //
 // Parameters:
@@ -361,10 +361,10 @@ define_function webSocketOnOpen(dev socket) {
 //
 //       scheme:[//[user:password@]host[:port]][/]path[?query][#fragment]
 //
-//    The url must be prefixed with either 'ws://' or 'wss://' (for secure connections). If the url contains a port 
+//    The url must be prefixed with either 'ws://' or 'wss://' (for secure connections). If the url contains a port
 //    then that port will be used to open the TCP/IP socket, otherwise port 80 will be used for unsecure websockets or
 //    port 443 for secure websockets.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function webSocketOpen(dev socket, char url[], char subprotocols[], char sessionId[]) {
 	stack_var integer idx;
@@ -409,7 +409,7 @@ define_function webSocketOpen(dev socket, char url[], char subprotocols[], char 
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: webSocketSend
 //
 // Parameters:
@@ -422,14 +422,14 @@ define_function webSocketOpen(dev socket, char url[], char subprotocols[], char 
 // Description:
 //    Sends a websocket message through a NetLinx socket device. The data is packed into a websocket frame prior to
 //    sending. Data is treated as text.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function webSocketSend(dev socket, char data[]) {
 	webSocketSendText(socket,data);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: webSocketClose
 //
 // Parameters:
@@ -443,15 +443,15 @@ define_function webSocketSend(dev socket, char data[]) {
 //    nothing
 //
 // Description:
-//    Initiates the closing of a WebSocket connection or connection attempt. If the connection is already CLOSED, this 
+//    Initiates the closing of a WebSocket connection or connection attempt. If the connection is already CLOSED, this
 //    method does nothing. Note that, as per RFC6455, the socket connection for a websocket is ALWAYS closed by the
 //    server and never the client. If the client wishes to close the connection it sends the websocket close frame to
 //    the server and the server will close the socket.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function webSocketClose(dev socket, integer code, char reason[]) {
 	stack_var integer idx;
-	
+
 	for(idx=1; idx<=length_array(wsSockets); idx++) {
 		if(socket == wsSockets[idx]) {
 			if ((webSockets[idx].readyState != CLOSED) && (webSockets[idx].readyState != CLOSING)) {
@@ -460,11 +460,11 @@ define_function webSocketClose(dev socket, integer code, char reason[]) {
 			}
 			break;
 		}
-	}	
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: webSocketFrameToString
 //
 // Parameters:
@@ -475,7 +475,7 @@ define_function webSocketClose(dev socket, integer code, char reason[]) {
 //
 // Description:
 //    Builds a data string conforming to the websocket protocol data frame defined in RFC6455.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function char [1024] webSocketFrameToString(WebSocketFrame wsf) {
 	char result[1024];
@@ -527,7 +527,7 @@ define_function char [1024] webSocketFrameToString(WebSocketFrame wsf) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: webSocketFrameFromString
 //
 // Parameters:
@@ -540,7 +540,7 @@ define_function char [1024] webSocketFrameToString(WebSocketFrame wsf) {
 // Description:
 //    The data string is assumed to conform to the websocket protocol data frame defined in RFC6455. The data string
 //    is parsed and the WebSocketFrame parameter (wsf) is updated to contain the values obtained during the parsing.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function webSocketFrameFromString(WebSocketFrame wsf, char data[]) {
 	long payloadLen;
@@ -573,7 +573,7 @@ define_function webSocketFrameFromString(WebSocketFrame wsf, char data[]) {
 		payloadLen = ((data[3] << 8) BOR (data[4]))
 		nByte = 5;
 	} else if((data[2] BAND $7F) == 127) {
-		payloadLen = ((data[3] << 56) BOR (data[4] << 48) BOR (data[5] << 40) BOR (data[6] << 32) 
+		payloadLen = ((data[3] << 56) BOR (data[4] << 48) BOR (data[5] << 40) BOR (data[6] << 32)
 									BOR (data[7] << 24) BOR (data[8] << 16) BOR (data[9] << 8) BOR (data[10]));
 		nByte = 11;
 	}
@@ -587,7 +587,7 @@ define_function webSocketFrameFromString(WebSocketFrame wsf, char data[]) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Functions:
 //    webSocketSendContinuation
 //    webSocketSendText
@@ -606,7 +606,7 @@ define_function webSocketFrameFromString(WebSocketFrame wsf, char data[]) {
 // Description:
 //    Sends a websocket message through a NetLinx socket device. The data is packed into a websocket frame prior to
 //    sending.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function webSocketSendContinuation(dev socket, char data[]) {
 	print("'Sending websocket continuation frame (',itoa(length_array(webSocketPackFrame(WEBSOCKET_OPCODE_CONT,data))),' bytes) to Socket[',devToString(socket),'].'",false);
@@ -639,7 +639,7 @@ define_function webSocketSendClose(dev socket, char data[]) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Functions:
 //    webSocketMask
 //    webSocketUnmask
@@ -653,7 +653,7 @@ define_function webSocketSendClose(dev socket, char data[]) {
 //
 // Description:
 //    Masks/Unmasks data confirming to the masking/unmasking process defined in RFC6455 (same process for both).
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function char[1024] webSocketMask(char data[], char maskingKey[4]) {
 	char result[1024];
@@ -672,7 +672,7 @@ define_function char[1024] webSocketUnmask(char data[], char maskingKey[4]) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: webSocketPackFrame
 //
 // Parameters:
@@ -685,7 +685,7 @@ define_function char[1024] webSocketUnmask(char data[], char maskingKey[4]) {
 // Description:
 //    Takes a websocket Op Code and some data and creates and returns a string containing a websocket protocol data
 //    frame. The data string may be empty.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function char[1024] webSocketPackFrame(char opCode, char data[]) {
 	char frame[1024];
@@ -708,7 +708,7 @@ define_function char[1024] webSocketPackFrame(char opCode, char data[]) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Functions:
 //    webSocketPackTextFrame
 //    webSocketPackBinaryFrame
@@ -723,9 +723,9 @@ define_function char[1024] webSocketPackFrame(char opCode, char data[]) {
 //    char[1024]   -   A character array (string) conforming to the websocket protocol data frame defined in RFC6455
 //
 // Description:
-//    Takes a some data and creates and returns a string containing a websocket protocol data frame. The data string 
+//    Takes a some data and creates and returns a string containing a websocket protocol data frame. The data string
 //    may be empty.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function char[1024] webSocketPackTextFrame(char data[]) {
 	return webSocketPackFrame(WEBSOCKET_OPCODE_TEXT,data);
@@ -748,7 +748,7 @@ define_function char[1024] webSocketPackCloseFrame(char data[]) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: webSocketCreateHandshakeKeyClient
 //
 // Parameters:
@@ -758,9 +758,9 @@ define_function char[1024] webSocketPackCloseFrame(char data[]) {
 //    char[200]   -   A character array (string) containing the client-side key for the WebSocket HTTP Open Handshake
 //
 // Description:
-//    Creates a client-side key to be used in the Sec-WebSocket-Key header of a WebSocket HTTP Open Hansdhake (see 
+//    Creates a client-side key to be used in the Sec-WebSocket-Key header of a WebSocket HTTP Open Hansdhake (see
 //    RFC6455).
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function char[200] webSocketCreateHandshakeKeyClient() {
 	char secWebSocketKey[200], byteVal[16];
@@ -777,7 +777,7 @@ define_function char[200] webSocketCreateHandshakeKeyClient() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: webSocketCreateHandshakeKeyServer
 //
 // Parameters:
@@ -787,10 +787,10 @@ define_function char[200] webSocketCreateHandshakeKeyClient() {
 //    char[200]   -   A character array (string) containing the server-side key for the WebSocket HTTP Open Handshake
 //
 // Description:
-//    Creates a server-side key to be used in the Sec-WebSocket-Accept header of a WebSocket HTTP Open Hansdhake (see 
+//    Creates a server-side key to be used in the Sec-WebSocket-Accept header of a WebSocket HTTP Open Hansdhake (see
 //    RFC6455). The secWebSocketKey parameter should contain the client-side key which is used by the server to produce
 //    the server-side key.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function char[200] webSocketCreateHandshakeKeyServer(char secWebSocketKey[]) {
 	char secWebSocketAccept[200];
@@ -801,7 +801,7 @@ define_function char[200] webSocketCreateHandshakeKeyServer(char secWebSocketKey
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: webSocketSendOpenHandshake
 //
 // Parameters:
@@ -812,7 +812,7 @@ define_function char[200] webSocketCreateHandshakeKeyServer(char secWebSocketKey
 //
 // Description:
 //    Creates and sends a HTTP string containing a WebSocket Open Handshake (See RFC6455).
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function webSocketSendOpenHandshake(dev socket) {
 	HttpRequest request;
@@ -854,7 +854,7 @@ define_function webSocketSendOpenHandshake(dev socket) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: webSocketGetSessionId
 //
 // Parameters:
@@ -866,7 +866,7 @@ define_function webSocketSendOpenHandshake(dev socket) {
 // Description:
 //    Returns the session ID stored for the websocket. May be an empty string (''). Returns empty string if socket not
 //    being managed.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function char[500] webSocketGetSessionId(dev socket) {
 	stack_var integer idx;
@@ -962,7 +962,7 @@ data_event[wsSockets] {
 				print("'Data received on Socket[',devToString(socket),'] is WebSocket close.'",false);
 				webSockets[idx].readyState = CLOSING;
 			}
-			
+
 		} else {	// assume we received a HTTP protocol string
 			char expectedWebSocketAcceptValue[1024]
 			stack_var char sessionIdHeader[50];

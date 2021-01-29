@@ -2,18 +2,18 @@ PROGRAM_NAME='uri'
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Include: uri
-// 
+//
 // Description:
 //
-//   - This include file provides functions for working with URI's as defined RFC 3986 (see 
+//   - This include file provides functions for working with URI's as defined RFC 3986 (see
 //     https://tools.ietf.org/html/rfc3986).
 //
 // Implementation:
 //
-//   - Any NetLinx program utilising the uri include file must use either the INCLUDE or #INCLUDE keywords to include 
-//     the uri include file within the program. While the INCLUDE and #INCLUDE keywords are both functionally 
-//     equivalent the #INCLUDE keyword is recommended only because it is the NetLinx keyword (the INCLUDE keyword is 
-//     from the earlier Axcess programming language and is included within the NetLinx programming language for 
+//   - Any NetLinx program utilising the uri include file must use either the INCLUDE or #INCLUDE keywords to include
+//     the uri include file within the program. While the INCLUDE and #INCLUDE keywords are both functionally
+//     equivalent the #INCLUDE keyword is recommended only because it is the NetLinx keyword (the INCLUDE keyword is
+//     from the earlier Axcess programming language and is included within the NetLinx programming language for
 //     backwards compatibility).
 //
 //     E.g:
@@ -55,7 +55,7 @@ char URI_UNRESERVED_CHARACTERS[] = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQR
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: uriToString
 //
 // Parameters:
@@ -66,7 +66,7 @@ char URI_UNRESERVED_CHARACTERS[] = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQR
 //
 // Description:
 //    Takes a URI object and returns a URI formatted string.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DEFINE_FUNCTION char[1500] uriToString(Uri u) {
 	char result[1500];
@@ -101,7 +101,7 @@ DEFINE_FUNCTION char[1500] uriToString(Uri u) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: uriFromString
 //
 // Parameters:
@@ -114,7 +114,7 @@ DEFINE_FUNCTION char[1500] uriToString(Uri u) {
 // Description:
 //    Takes a URI object and a character array assumed to be containing a URI string. Parses the URI string and updates
 //    the values of the URI object to match the parsed results.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DEFINE_FUNCTION uriFromString(Uri u, char str[]) {
 	stack_var char temp[200]
@@ -217,7 +217,7 @@ DEFINE_FUNCTION uriFromString(Uri u, char str[]) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: uriPercentEncodeString
 //
 // Parameters:
@@ -228,7 +228,7 @@ DEFINE_FUNCTION uriFromString(Uri u, char str[]) {
 //
 // Description:
 //    Takes a character array (string) and returns a string containing a percent-encoded version of that string.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DEFINE_FUNCTION char[2048] uriPercentEncodeString(char u[]) {
 	stack_var char i;
@@ -249,7 +249,7 @@ DEFINE_FUNCTION char[2048] uriPercentEncodeString(char u[]) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: uriPercentEncodeChar
 //
 // Parameters:
@@ -260,14 +260,14 @@ DEFINE_FUNCTION char[2048] uriPercentEncodeString(char u[]) {
 //
 // Description:
 //    Takes a character and returns a string containing a percent-encoded version of that character.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DEFINE_FUNCTION char[3] uriPercentEncodeChar(char c) {
 	return "'%',format('%02X',"c")";
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: uriIsReservedChar
 //
 // Parameters:
@@ -277,16 +277,16 @@ DEFINE_FUNCTION char[3] uriPercentEncodeChar(char c) {
 //    integer   -   An integer containing either a true (1) or false (0) value
 //
 // Description:
-//    Takes a character and returns a true|false result indicating whether the character would be a reserved character 
+//    Takes a character and returns a true|false result indicating whether the character would be a reserved character
 //    in a URI.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DEFINE_FUNCTION integer uriIsReservedChar(char c) {
 	return (find_string(URI_RESERVED_CHARACTERS,"c",1))
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: uriIsUnreservedChar
 //
 // Parameters:
@@ -296,9 +296,9 @@ DEFINE_FUNCTION integer uriIsReservedChar(char c) {
 //    integer   -   An integer containing either a true (1) or false (0) value
 //
 // Description:
-//    Takes a character and returns a true|false result indicating whether the character would not be a reserved 
+//    Takes a character and returns a true|false result indicating whether the character would not be a reserved
 //    character in a URI (i.e., is it unreserved?)
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DEFINE_FUNCTION integer uriIsUnreservedChar(char c) {
 	return (find_string(URI_UNRESERVED_CHARACTERS,"c",1))

@@ -2,7 +2,7 @@ PROGRAM_NAME='sha1'
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Include: sha1
-// 
+//
 // Description:
 //
 //   - This include file provides a NetLinx implementation of the SHA-1 (Secure Hash Algorithm 1) cryptographic hash
@@ -10,10 +10,10 @@ PROGRAM_NAME='sha1'
 //
 // Implementation:
 //
-//   - Any NetLinx program utilising the sha1 include file must use either the INCLUDE or #INCLUDE keywords to include 
-//     the sha1 include file within the program. While the INCLUDE and #INCLUDE keywords are both functionally 
-//     equivalent the #INCLUDE keyword is recommended only because it is the NetLinx keyword (the INCLUDE keyword is 
-//     from the earlier Axcess programming language and is included within the NetLinx programming language for 
+//   - Any NetLinx program utilising the sha1 include file must use either the INCLUDE or #INCLUDE keywords to include
+//     the sha1 include file within the program. While the INCLUDE and #INCLUDE keywords are both functionally
+//     equivalent the #INCLUDE keyword is recommended only because it is the NetLinx keyword (the INCLUDE keyword is
+//     from the earlier Axcess programming language and is included within the NetLinx programming language for
 //     backwards compatibility).
 //
 //     E.g:
@@ -99,13 +99,13 @@ define_function CHAR[20] sha1(char msg[]) {
 
 	char M[SHA_1_BLOCK_SIZE_BYTES];
 	long W[80];
-	
+
 	long lenMsg;
 
 	long TEMP;
-	
+
 	lenMsg = length_array(msg);
-	
+
 	if((lenMsg % 64) > 55) {	// not enough room to pad in the last 512-bit block will need to pad and then add another 512-bit block
 		msgPadded = "msg,$80";
 		while((length_array(msgPadded) % 64) > 0) {
@@ -121,7 +121,7 @@ define_function CHAR[20] sha1(char msg[]) {
 		}
 	}
 	msgPadded = "msgPadded,$00,$00,$00,$00,ltba(lenMsg*SHA_1_BYTE_SIZE_BITS)"
-	
+
 	h0 = $67452301;
 	h1 = $EFCDAB89;
 	h2 = $98BADCFE;
@@ -129,7 +129,7 @@ define_function CHAR[20] sha1(char msg[]) {
 	h4 = $C3D2E1F0;
 
 	for(mIdx = 1; mIdx < length_array(msgPadded); mIdx=mIdx+SHA_1_BLOCK_SIZE_BYTES) {
-	
+
 		M = mid_string(msgPadded,mIdx,SHA_1_BLOCK_SIZE_BYTES);
 
 		i = 1;
@@ -152,7 +152,7 @@ define_function CHAR[20] sha1(char msg[]) {
 
 		for(t = 1; t <= 80; t++) {
 			stack_var long f;
-			stack_var long k;	
+			stack_var long k;
 
 			if((1 <= t) && (t <= 20)) {
 				f = ((B BAND C) BOR ((BNOT B) BAND D));

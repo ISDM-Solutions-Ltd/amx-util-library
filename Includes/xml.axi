@@ -20,9 +20,9 @@ Returns:
 	char[XML_MAX_CHARS] - XML formatted string (e.g., '<element>content</element>')
 Description:
 	Creates an XML formatted string using the provided elemenet name and contents.
-	Assumes that element name and content are correctly formatted (e.g., no spaces, left angle brackets, right angle 
+	Assumes that element name and content are correctly formatted (e.g., no spaces, left angle brackets, right angle
 	brackets, etc,, in element name).
-	The content may itself already be an XML formatted string so this function could be called repeatedly to build a 
+	The content may itself already be an XML formatted string so this function could be called repeatedly to build a
 	complete XML string. E.g, to build the following XML string:
 
 	<country>
@@ -90,8 +90,8 @@ Returns:
 	char[XML_MAX_CHARS] - Element including opening and closing XML tags
 Description:
 	Returns an element from an XML string.
-	An element name can be provided to refine the search but is optional. If the element name is left out the 1st 
-	element in the XMl string will be returned. If the element name is provided the 1st element in the XML string with a 
+	An element name can be provided to refine the search but is optional. If the element name is left out the 1st
+	element in the XMl string will be returned. If the element name is provided the 1st element in the XML string with a
 	matching name will be returned.
 	An attribute name/value pair can also be provided to further refine the search but is also optional.
 
@@ -105,7 +105,7 @@ Usage:
 						<genre>Computer</genre>
 						<price>44.95</price>
 						<publish_date>2000-10-01</publish_date>
-						<description>An in-depth look at creating applications 
+						<description>An in-depth look at creating applications
 						with XML.</description>
 				 </book>
 				 <book id="bk102">
@@ -114,8 +114,8 @@ Usage:
 						<genre>Fantasy</genre>
 						<price>5.95</price>
 						<publish_date>2000-12-16</publish_date>
-						<description>A former architect battles corporate zombies, 
-						an evil sorceress, and her own childhood to become queen 
+						<description>A former architect battles corporate zombies,
+						an evil sorceress, and her own childhood to become queen
 						of the world.</description>
 				 </book>
 			<catalog>
@@ -129,7 +129,7 @@ Usage:
 						<genre>Computer</genre>
 						<price>44.95</price>
 						<publish_date>2000-10-01</publish_date>
-						<description>An in-depth look at creating applications 
+						<description>An in-depth look at creating applications
 						with XML.</description>
 				 </book>
 				 <book id="bk102">
@@ -138,8 +138,8 @@ Usage:
 						<genre>Fantasy</genre>
 						<price>5.95</price>
 						<publish_date>2000-12-16</publish_date>
-						<description>A former architect battles corporate zombies, 
-						an evil sorceress, and her own childhood to become queen 
+						<description>A former architect battles corporate zombies,
+						an evil sorceress, and her own childhood to become queen
 						of the world.</description>
 				 </book>
 			<catalog>
@@ -152,7 +152,7 @@ Usage:
 					<genre>Computer</genre>
 					<price>44.95</price>
 					<publish_date>2000-10-01</publish_date>
-					<description>An in-depth look at creating applications 
+					<description>An in-depth look at creating applications
 					with XML.</description>
 			 </book>
 
@@ -164,8 +164,8 @@ Usage:
 					<genre>Fantasy</genre>
 					<price>5.95</price>
 					<publish_date>2000-12-16</publish_date>
-					<description>A former architect battles corporate zombies, 
-					an evil sorceress, and her own childhood to become queen 
+					<description>A former architect battles corporate zombies,
+					an evil sorceress, and her own childhood to become queen
 					of the world.</description>
 			 </book>
 
@@ -295,9 +295,9 @@ Parameters:
 Returns:
 	char[XML_MAX_CHARS] - Content of element
 Description:
-	Returns the content of an element in an XML string. An element name can be provided to refine the search but is 
-	optional. If the element name is left out the content of the 1st element in the XML string will be returned. If the 
-	element name is provided the content of the 1st element in the XML string with a matching name will be returned. An 
+	Returns the content of an element in an XML string. An element name can be provided to refine the search but is
+	optional. If the element name is left out the content of the 1st element in the XML string will be returned. If the
+	element name is provided the content of the 1st element in the XML string with a matching name will be returned. An
 	attribute name/value pair can also be provided to further refine the search but is also optional.
 
 Usage:
@@ -310,7 +310,7 @@ Usage:
 						<genre>Computer</genre>
 						<price>44.95</price>
 						<publish_date>2000-10-01</publish_date>
-						<description>An in-depth look at creating applications 
+						<description>An in-depth look at creating applications
 						with XML.</description>
 				 </book>
 				 <book id="bk102">
@@ -319,8 +319,8 @@ Usage:
 						<genre>Fantasy</genre>
 						<price>5.95</price>
 						<publish_date>2000-12-16</publish_date>
-						<description>A former architect battles corporate zombies, 
-						an evil sorceress, and her own childhood to become queen 
+						<description>A former architect battles corporate zombies,
+						an evil sorceress, and her own childhood to become queen
 						of the world.</description>
 				 </book>
 			<catalog>
@@ -333,7 +333,7 @@ Usage:
 					<genre>Computer</genre>
 					<price>44.95</price>
 					<publish_date>2000-10-01</publish_date>
-					<description>An in-depth look at creating applications 
+					<description>An in-depth look at creating applications
 					with XML.</description>
 			 </book>
 			 <book id="bk102">
@@ -342,8 +342,8 @@ Usage:
 					<genre>Fantasy</genre>
 					<price>5.95</price>
 					<publish_date>2000-12-16</publish_date>
-					<description>A former architect battles corporate zombies, 
-					an evil sorceress, and her own childhood to become queen 
+					<description>A former architect battles corporate zombies,
+					an evil sorceress, and her own childhood to become queen
 					of the world.</description>
 			 </book>
 
@@ -354,7 +354,7 @@ Usage:
 				<genre>Computer</genre>
 				<price>44.95</price>
 				<publish_date>2000-10-01</publish_date>
-				<description>An in-depth look at creating applications 
+				<description>An in-depth look at creating applications
 				with XML.</description>
 
 	Calling xmlGetContent(xmlBooks,'book','id','bk102') would return:
@@ -364,8 +364,8 @@ Usage:
 				<genre>Fantasy</genre>
 				<price>5.95</price>
 				<publish_date>2000-12-16</publish_date>
-				<description>A former architect battles corporate zombies, 
-				an evil sorceress, and her own childhood to become queen 
+				<description>A former architect battles corporate zombies,
+				an evil sorceress, and her own childhood to become queen
 				of the world.</description>
 
 	Calling xmlGetContent(xmlBooks,'book','id','bk103') would return nothing
@@ -445,7 +445,7 @@ Usage:
 						<genre>Computer</genre>
 						<price>44.95</price>
 						<publish_date>2000-10-01</publish_date>
-						<description>An in-depth look at creating applications 
+						<description>An in-depth look at creating applications
 						with XML.</description>
 				 </book>
 				 <book id="bk102">
@@ -454,8 +454,8 @@ Usage:
 						<genre>Fantasy</genre>
 						<price>5.95</price>
 						<publish_date>2000-12-16</publish_date>
-						<description>A former architect battles corporate zombies, 
-						an evil sorceress, and her own childhood to become queen 
+						<description>A former architect battles corporate zombies,
+						an evil sorceress, and her own childhood to become queen
 						of the world.</description>
 				 </book>
 			<catalog>
@@ -472,7 +472,7 @@ Usage:
 						<genre>Computer</genre>
 						<price>44.95</price>
 						<publish_date>2000-10-01</publish_date>
-						<description>An in-depth look at creating applications 
+						<description>An in-depth look at creating applications
 						with XML.</description>
 				 </book>
 				 <book id="bk102">
@@ -481,8 +481,8 @@ Usage:
 						<genre>Fantasy</genre>
 						<price>5.95</price>
 						<publish_date>2000-12-16</publish_date>
-						<description>A former architect battles corporate zombies, 
-						an evil sorceress, and her own childhood to become queen 
+						<description>A former architect battles corporate zombies,
+						an evil sorceress, and her own childhood to become queen
 						of the world.</description>
 				 </book>
 
@@ -497,7 +497,7 @@ Usage:
 			<genre>Computer</genre>
 			<price>44.95</price>
 			<publish_date>2000-10-01</publish_date>
-			<description>An in-depth look at creating applications 
+			<description>An in-depth look at creating applications
 			with XML.</description>
 
 	Calling xmlGetName(xmlBooks) would return:
@@ -537,9 +537,9 @@ Parameters:
 Returns:
 	char[50]                 - Value of attribute
 Description:
-	Returns the value of a specified attribute from an element in an XML string. An element name can be provided to 
-	refine the search but is optional. If the element name is left out the 1st element in the XML string will be used. If 
-	the element name is provided the 1st element in the XML string with a matching name will be used. An attribute 
+	Returns the value of a specified attribute from an element in an XML string. An element name can be provided to
+	refine the search but is optional. If the element name is left out the 1st element in the XML string will be used. If
+	the element name is provided the 1st element in the XML string with a matching name will be used. An attribute
 	name/value pair can also be provided to further refine the search but is also optional.
 
 Usage:
@@ -552,7 +552,7 @@ Usage:
 						<genre>Computer</genre>
 						<price>44.95</price>
 						<publish_date>2000-10-01</publish_date>
-						<description>An in-depth look at creating applications 
+						<description>An in-depth look at creating applications
 						with XML.</description>
 				 </book>
 				 <book id="bk102">
@@ -561,8 +561,8 @@ Usage:
 						<genre>Fantasy</genre>
 						<price>5.95</price>
 						<publish_date>2000-12-16</publish_date>
-						<description>A former architect battles corporate zombies, 
-						an evil sorceress, and her own childhood to become queen 
+						<description>A former architect battles corporate zombies,
+						an evil sorceress, and her own childhood to become queen
 						of the world.</description>
 				 </book>
 			<catalog>
@@ -576,7 +576,7 @@ Usage:
 						<genre>Computer</genre>
 						<price>44.95</price>
 						<publish_date>2000-10-01</publish_date>
-						<description>An in-depth look at creating applications 
+						<description>An in-depth look at creating applications
 						with XML.</description>
 				 </book>
 				 <book id="bk102">
@@ -585,8 +585,8 @@ Usage:
 						<genre>Fantasy</genre>
 						<price>5.95</price>
 						<publish_date>2000-12-16</publish_date>
-						<description>A former architect battles corporate zombies, 
-						an evil sorceress, and her own childhood to become queen 
+						<description>A former architect battles corporate zombies,
+						an evil sorceress, and her own childhood to become queen
 						of the world.</description>
 				 </book>
 			<catalog>
@@ -599,7 +599,7 @@ Usage:
 					<genre>Computer</genre>
 					<price>44.95</price>
 					<publish_date>2000-10-01</publish_date>
-					<description>An in-depth look at creating applications 
+					<description>An in-depth look at creating applications
 					with XML.</description>
 			 </book>
 
@@ -611,8 +611,8 @@ Usage:
 					<genre>Fantasy</genre>
 					<price>5.95</price>
 					<publish_date>2000-12-16</publish_date>
-					<description>A former architect battles corporate zombies, 
-					an evil sorceress, and her own childhood to become queen 
+					<description>A former architect battles corporate zombies,
+					an evil sorceress, and her own childhood to become queen
 					of the world.</description>
 			 </book>
 
@@ -648,7 +648,7 @@ define_function char[50]    xmlGetAttribute (char xml[], char elementName[], cha
 		return '';
 
 	remove_string(xmlOpenTag,"' ',attribName,'='",1);
-	
+
 	if(xmlOpenTag[1] == '"') {	// value is a string
 		remove_string(xmlOpenTag,"'"'",1);
 		attributeValue = remove_string(xmlOpenTag,"'"'",1);
@@ -677,9 +677,9 @@ Parameters:
 Returns:
 	char[XML_MAX_CHARS] - Element including opening and closing XML tags
 Description:
-	Returns an element in an XML string. An element name can be provided to refine the search but is optional. If the 
-	element name is left out the 1st element in the XMl string will be returned. If the element name is provided the 1st 
-	element in the XML string with a matching name will be returned. An attribute name/value pair can also be provided to 
+	Returns an element in an XML string. An element name can be provided to refine the search but is optional. If the
+	element name is left out the 1st element in the XMl string will be returned. If the element name is provided the 1st
+	element in the XML string with a matching name will be returned. An attribute name/value pair can also be provided to
 	further refine the search but is also optional. The returned element is also removed from the XML string.
 */
 define_function char[XML_MAX_CHARS] xmlParseElement (char xml[], char elementName[], char attribName[], char attribValue[]) {
@@ -707,12 +707,12 @@ Parameters:
 Returns:
 	char[XML_MAX_CHARS] - Content of element
 Description:
-	Returns the content of an element in an XML string. An element name can be provided to refine the search but is 
-	optional. If the element name is left out the content of the 1st element in the XML string will be returned. If the 
-	element name is provided the content of the 1st element in the XML string with a matching name will be returned. An 
-	attribute name/value pair can also be provided to further refine the search but is also optional. The returned 
+	Returns the content of an element in an XML string. An element name can be provided to refine the search but is
+	optional. If the element name is left out the content of the 1st element in the XML string will be returned. If the
+	element name is provided the content of the 1st element in the XML string with a matching name will be returned. An
+	attribute name/value pair can also be provided to further refine the search but is also optional. The returned
 	content is also removed from the XML string.
-*/ 
+*/
 define_function char[XML_MAX_CHARS] xmlParseContent (char xml[], char elementName[], char attribName[], char attribValue[]) {
 	stack_var char xmlElement[XML_MAX_CHARS];
 	stack_var char xmlElementContentRemoved[XML_MAX_CHARS];

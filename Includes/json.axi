@@ -271,6 +271,10 @@ define_function integer jsonParseArray(char jsonArrayStr[], JsonArray jArr) {
 	integer invalidJson;
 	integer i, j;
 
+	AMX_LOG(AMX_DEBUG,'json::jsonParseArray');
+
+	AMX_LOG(AMX_DEBUG,"'json::jsonParseArray:Length of JSON string = ',itoa(length_array(jsonArrayStr))");
+
 	tempJson = jsonRemoveWhiteSpace(jsonArrayStr);
 	AMX_LOG_LONG_STRING(AMX_DEBUG,"'json::jsonParseArray: ',tempJson");
 
@@ -281,7 +285,7 @@ define_function integer jsonParseArray(char jsonArrayStr[], JsonArray jArr) {
 	if(tempJson[1] == '[' && tempJson[length_string(tempJson)] == ']') {
 		if((length_string(tempJson) == 2) && (tempJson[1] == '[') && (tempJson[2] == ']')) { // empty object
 			set_length_array(jArr.elements,0);
-			//send_string 0, 'json::jsonParseArray:Returning true - empty array';
+			AMX_LOG(AMX_DEBUG,'json::jsonParseArray:Returning true - empty array');
 			return true;
 		}
 		else {
@@ -296,16 +300,19 @@ define_function integer jsonParseArray(char jsonArrayStr[], JsonArray jArr) {
 		if(find_string(tempJson,'true',1) == 1) { // boolean true
 			jArr.elements[i].type = JSON_TYPE_BOOLEAN;
 			jArr.elements[i].value = 'true';
+			AMX_LOG(AMX_DEBUG,"'json::jsonParseArray:[type: ',jArr.elements[i].type,'][value: ',jArr.elements[i].value,']'");
 			remove_string(tempJson,"'true'",1);
 		}
 		else if(find_string(tempJson,'false',1) == 1) { // boolean false
 			jArr.elements[i].type = JSON_TYPE_BOOLEAN;
 			jArr.elements[i].value = 'false';
+			AMX_LOG(AMX_DEBUG,"'json::jsonParseArray:[type: ',jArr.elements[i].type,'][value: ',jArr.elements[i].value,']'");
 			remove_string(tempJson,"'false'",1);
 		}
 		else if(find_string(tempJson,'null',1) == 1) { // null
 			jArr.elements[i].type = JSON_TYPE_NULL;
 			jArr.elements[i].value = 'null';
+			AMX_LOG(AMX_DEBUG,"'json::jsonParseArray:[type: ',jArr.elements[i].type,'][value: ',jArr.elements[i].value,']'");
 			remove_string(tempJson,"'null'",1);
 		}
 		else if(tempJson[1] == '"') { // string
@@ -317,6 +324,7 @@ define_function integer jsonParseArray(char jsonArrayStr[], JsonArray jArr) {
 					foundClosingDoubleQuotes = true;
 					jArr.elements[i].type = JSON_TYPE_STRING;
 					jArr.elements[i].value = mid_string(tempJson,2,j-2);
+					AMX_LOG(AMX_DEBUG,"'json::jsonParseArray:[type: ',jArr.elements[i].type,'][value: ',jArr.elements[i].value,']'");
 					remove_string(tempJson,"'"',jArr.elements[i].value,'"'",1);
 					break;
 				}
@@ -362,6 +370,7 @@ define_function integer jsonParseArray(char jsonArrayStr[], JsonArray jArr) {
 				jArr.elements[i].value = "jArr.elements[i].value,tempJson[j]";
 				j++;
 			}
+			AMX_LOG(AMX_DEBUG,"'json::jsonParseArray:[type: ',jArr.elements[i].type,'][value: ',jArr.elements[i].value,']'");
 			remove_string(tempJson,jArr.elements[i].value,1);
 		}
 		else if(tempJson[1] == '[') { // array
@@ -395,6 +404,7 @@ define_function integer jsonParseArray(char jsonArrayStr[], JsonArray jArr) {
 							foundClosingSquareBracket = true;
 							jArr.elements[i].type = JSON_TYPE_ARRAY;
 							jArr.elements[i].value = mid_string(tempJson,1,j);   // includes enclosing brackets '[' and ']'
+							AMX_LOG(AMX_DEBUG,"'json::jsonParseArray:[type: ',jArr.elements[i].type,'][value: ',jArr.elements[i].value,']'");
 							remove_string(tempJson,mid_string(tempJson,1,j),1);
 							break;
 						}
@@ -440,6 +450,7 @@ define_function integer jsonParseArray(char jsonArrayStr[], JsonArray jArr) {
 							foundClosingCurlyBrace = true;
 							jArr.elements[i].type = JSON_TYPE_OBJECT;
 							jArr.elements[i].value = mid_string(tempJson,1,j);   // includes enclosing brackets '{' and '}'
+							AMX_LOG(AMX_DEBUG,"'json::jsonParseArray:[type: ',jArr.elements[i].type,'][value: ',jArr.elements[i].value,']'");
 							remove_string(tempJson,mid_string(tempJson,1,j),1);
 							break;
 						}
@@ -473,10 +484,12 @@ define_function integer jsonParseArray(char jsonArrayStr[], JsonArray jArr) {
 	}
 
 	if(invalidJson) {
+		AMX_LOG(AMX_ERROR,'json::jsonParseArray:Returning false - invalid JSON');
 		return false;
 	}
 	else {
 		set_length_array(jArr.elements,i);
+		AMX_LOG(AMX_DEBUG,"'json::jsonParseArray:Returning true JSON array contains ',itoa(i),' type:value elements'");
 		return true;
 	}
 

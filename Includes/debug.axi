@@ -2,17 +2,17 @@ PROGRAM_NAME='debug'
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Include: debug
-// 
+//
 // Description:
 //
 //    - This include file provides useful fuctions for debugging a NetLinx program.
 //
 // Implementation:
 //
-//   - Any NetLinx program utilising the debug include file must use either the INCLUDE or #INCLUDE keywords to 
-//     include the debug include file within the program. While the INCLUDE and #INCLUDE keywords are both 
+//   - Any NetLinx program utilising the debug include file must use either the INCLUDE or #INCLUDE keywords to
+//     include the debug include file within the program. While the INCLUDE and #INCLUDE keywords are both
 //     functionally equivalent the #INCLUDE keyword is recommended only because it is the NetLinx keyword (the INCLUDE
-//     keyword is from the earlier Axcess programming language and is included within the NetLinx programming language 
+//     keyword is from the earlier Axcess programming language and is included within the NetLinx programming language
 //     for backwards compatibility).
 //
 //     E.g:
@@ -32,7 +32,7 @@ volatile debug = false;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: print
 //
 // Parameters:
@@ -46,7 +46,7 @@ volatile debug = false;
 // Description:
 //    Sends data to the master for debugging purposes. Data can be viewed in the Diagnostics tab of the NetLinx Studio
 //    application or by opening a telnet session to the master and typing "msg on".
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function print(char data[], integer multiLine) {
 	stack_var char temp[20000]
@@ -78,7 +78,7 @@ define_function print(char data[], integer multiLine) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: printHex
 //
 // Parameters:
@@ -88,10 +88,10 @@ define_function print(char data[], integer multiLine) {
 //    nothing
 //
 // Description:
-//    Sends an ASCII Hex representation of the data to the master for debugging purposes. Data can be viewed in the 
-//    Diagnostics tab of the NetLinx Studio application or by opening a telnet session to the master and typing 
+//    Sends an ASCII Hex representation of the data to the master for debugging purposes. Data can be viewed in the
+//    Diagnostics tab of the NetLinx Studio application or by opening a telnet session to the master and typing
 //    "msg on".
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function printHex(char data[]) {
 	char result[5000];
@@ -107,7 +107,7 @@ define_function printHex(char data[]) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: printHexBlock
 //
 // Parameters:
@@ -118,10 +118,10 @@ define_function printHex(char data[]) {
 //
 // Description:
 //    Sends an ASCII Hex representation of the data to the master for debugging purposes. A space ' ' character is
-//    placed between every 4th hex value and a new line is printed after every 16th hex value. Data can be viewed in 
-//    the Diagnostics tab of the NetLinx Studio application or by opening a telnet session to the master and typing 
+//    placed between every 4th hex value and a new line is printed after every 16th hex value. Data can be viewed in
+//    the Diagnostics tab of the NetLinx Studio application or by opening a telnet session to the master and typing
 //    "msg on".
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function printHexBlock(char data[]) {
 	char result[5000];
@@ -147,7 +147,7 @@ define_function printHexBlock(char data[]) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: devToString
 //
 // Parameters:
@@ -157,9 +157,9 @@ define_function printHexBlock(char data[]) {
 //    char[17]   -   A character array containing a string in the form D:P:S
 //
 // Description:
-//    Takes a NetLinx device and returns a string containing an ASCII representation of the device number, port, and 
+//    Takes a NetLinx device and returns a string containing an ASCII representation of the device number, port, and
 //    system in the D:P:S form number:port:system (e.g., '10001:1:0')
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function char[17] devToString(dev device) {
 	return "itoa(device.number),':',itoa(device.port),':',itoa(device.system)"

@@ -52,8 +52,8 @@ char HTTP_VERSION_1_1[] = 'HTTP/1.1';
 // Informational Status Codes
 integer HTTP_STATUS_CODE_CONTINUE            = 100; // Only a part of the request has been received by the server, but as long as it has not been rejected, the client should continue with the request.
 integer HTTP_STATUS_CODE_SWITCHING_PROTOCOLS = 101; // The server switches protocol.
-integer HTTP_STATUS_CODE_PROCESSING          = 102; // 
-integer HTTP_STATUS_CODE_EARLY_HINTS         = 103; // 
+integer HTTP_STATUS_CODE_PROCESSING          = 102; //
+integer HTTP_STATUS_CODE_EARLY_HINTS         = 103; //
 
 // Successful Status Codes
 integer HTTP_STATUS_CODE_OK                            = 200; // The request is OK.
@@ -76,7 +76,7 @@ integer HTTP_STATUS_CODE_NOT_MODIFIED       = 304; // This is the response code 
 integer HTTP_STATUS_CODE_USE_PROXY          = 305; // The requested URL must be accessed through the proxy mentioned in the Location header.
 integer HTTP_STATUS_CODE_UNUSED             = 306; // This code was used in a previous version. It is no longer used, but the code is reserved.
 integer HTTP_STATUS_CODE_TEMPORARY_REDIRECT = 307; // The requested page has moved temporarily to a new url.
-integer HTTP_STATUS_CODE_PERMANENT_REDIRECT = 308; // 
+integer HTTP_STATUS_CODE_PERMANENT_REDIRECT = 308; //
 
 // Client Error Status Codes
 integer HTTP_STATUS_CODE_BAD_REQUEST                        = 400; // The server did not understand the request.
@@ -168,7 +168,7 @@ char HTTP_HEADER_FIELD_ALLOW                       [] = 'Allow'; // Allow: GET, 
 char HTTP_HEADER_FIELD_ALT_SVC                     [] = 'Alt-Svc'; // Alt-Svc: h2="http2.example.com:443"; ma=7200
 //char HTTP_HEADER_FIELD_CACHE_CONTROL             [] = 'Cache-Control'; // Cache-Control: max-age=3600
 //char HTTP_HEADER_FIELD_CONNECTION                [] = 'Connection'; // Connection: close
-char HTTP_HEADER_FIELD_CONTENT_DISPOSITION         [] = 'Content-Disposition'; // Content-Disposition: attachment; filename="fname.ext"	
+char HTTP_HEADER_FIELD_CONTENT_DISPOSITION         [] = 'Content-Disposition'; // Content-Disposition: attachment; filename="fname.ext"
 char HTTP_HEADER_FIELD_CONTENT_ENCODING            [] = 'Content-Encoding'; // Content-Encoding: gzip
 char HTTP_HEADER_FIELD_CONTENT_LANGUAGE            [] = 'Content-Language'; // Content-Language: da
 //char HTTP_HEADER_FIELD_CONTENT_LENGTH            [] = 'Content-Length'; // Content-Length: 348
@@ -219,7 +219,7 @@ HTTP String Specific Functions
 */
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: httpParseResponse
 //
 // Parameters:
@@ -231,48 +231,48 @@ HTTP String Specific Functions
 //
 // Description:
 //    Parses a HTTP response from a character buffer. Returns a true or false value indicating success or failure.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function integer httpParseResponse(HttpResponse response, char buffer[]) {
 	char workingBuffer[HTTP_MAX_MESSAGE_LENGTH];
 	char httpStatusLine[1024];
 	char httpHeaderLines[5000];
 	HttpResponse tempResponse;
-	
+
 	workingBuffer = buffer;
-	
+
 	if(!find_string(workingBuffer,'HTTP/',1)) {
 		return false;
 	}
-	
+
 	remove_string(workingBuffer,'HTTP/',1);
-	
+
 	if(!find_string(workingBuffer,"$0d,$0a",1)) {
 		return false;
 	}
-	
+
 	httpStatusLine = remove_string(workingBuffer,"$0d,$0a",1);
 	httpStatusLine = left_string(httpStatusLine,length_string(httpStatusLine)-2);
-	
+
 	tempResponse.version = atof(httpStatusLine);
-	
+
 	remove_string(httpStatusLine,' ',1);
 	tempResponse.status.code = atoi(httpStatusLine);
-	
+
 	remove_string(httpStatusLine,' ',1);
 	tempResponse.status.message = httpStatusLine;
-	
+
 	if(!find_string(workingBuffer,"$0d,$0a,$0d,$0a",1)) {
 		return false;
 	}
-	
+
 	httpHeaderLines = remove_string(workingBuffer,"$0d,$0a,$0d,$0a",1);
-	
+
 	while(httpHeaderLines != "$0d,$0a") {
 		char headerLine[2000];
 		char headerName[50];
 		char headerValue[2000];
-		
+
 		headerLine = remove_string(httpHeaderLines,"$0d,$0a",1);
 		headerLine = left_string(headerLine,length_string(headerLine)-2);
 		headerName = remove_string(headerLine,"':'",1);
@@ -280,19 +280,19 @@ define_function integer httpParseResponse(HttpResponse response, char buffer[]) 
 		headerValue = right_string(headerLine,length_string(headerLine)-1);
 		httpSetHeader(tempResponse.headers,headerName,headerValue);
 	}
-	
+
 	if(httpHasHeader(tempResponse.headers,'Transfer-Encoding')) {
 		char values[20][1024];
 		integer i;
 		integer isChunked;
-		
+
 		httpGetHeaderValues(tempResponse.headers,'Transfer-Encoding',values);
-		
+
 		for(i=1; i<=length_array(values); i++) {
-		
+
 			if(find_string(values[i],'chunked',1)) {
 				isChunked = true;
-				
+
 				if(!find_string(workingBuffer,"$0D,$0A,'0',$0D,$0A,$0D,$0A",1)) {
 					return false;
 				}
@@ -304,7 +304,7 @@ define_function integer httpParseResponse(HttpResponse response, char buffer[]) 
 				}
 			}
 		}
-		
+
 		if(!isChunked) {
 			return false;
 		}
@@ -314,15 +314,15 @@ define_function integer httpParseResponse(HttpResponse response, char buffer[]) 
 		long bytesRemainingInBuffer;
 		char values[20][1024];
 		integer i;
-		
+
 		httpGetHeaderValues(tempResponse.headers,'Content-Length',values);
 		contentLength = atoi(values[1]);
-		
+
 		if(length_array(workingBuffer)<contentLength) {
 			AMX_LOG(AMX_ERROR,"'http-alt::httpParseResponse...returning(false) - buffer does not contain enough data'");
 			return false;
 		}
-		
+
 		tempResponse.body = get_buffer_string(workingBuffer,contentLength);
 		httpCopyResponse(tempResponse,response);
 		buffer = right_string(buffer,length_array(workingBuffer));
@@ -336,7 +336,7 @@ define_function integer httpParseResponse(HttpResponse response, char buffer[]) 
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: httpParseRequest
 //
 // Parameters:
@@ -348,7 +348,7 @@ define_function integer httpParseResponse(HttpResponse response, char buffer[]) 
 //
 // Description:
 //    Parses a HTTP request from a character buffer. Returns a true or false value indicating success or failure.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function integer httpParseRequest(HttpRequest request, char buffer[]) {
 	#warn '@todo: implement httpParseRequest method'
@@ -356,7 +356,7 @@ define_function integer httpParseRequest(HttpRequest request, char buffer[]) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: httpRequestToString
 //
 // Parameters:
@@ -367,27 +367,27 @@ define_function integer httpParseRequest(HttpRequest request, char buffer[]) {
 //
 // Description:
 //    Returns a HTTP request string from the data contained in the HttpRequest object parameter
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function char[HTTP_MAX_MESSAGE_LENGTH] httpRequestToString(HttpRequest request) {
     char http[1024];
     integer i;
-    
+
     http = "request.method,' ',uriPercentEncodeString(request.requestUri),' HTTP/',format('%.1f',request.version),$0d,$0a"
-    
+
     for(i=1; i<=length_array(request.headers); i++) {
 		http = "http,request.headers[i].name,': ',request.headers[i].value,$0d,$0a";
     }
-    
+
     http = "http,$0d,$0a";
-    
+
     http = "http,request.body"
-    
+
     return http;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: httpRequestToDebug
 //
 // Parameters:
@@ -398,30 +398,30 @@ define_function char[HTTP_MAX_MESSAGE_LENGTH] httpRequestToString(HttpRequest re
 //
 // Description:
 //    Prints HTTP request to debug
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function httpRequestToDebug(HttpRequest request) {
     integer i;
-	
+
 	AMX_LOG(AMX_DEBUG,'----- BEGIN HTTP REQUEST -----');
-    
+
     AMX_LOG(AMX_DEBUG,"request.method,' ',uriPercentEncodeString(request.requestUri),' HTTP/',format('%.1f',request.version)");
-    
+
     for(i=1; i<=length_array(request.headers); i++) {
 		AMX_LOG(AMX_DEBUG,"request.headers[i].name,': ',request.headers[i].value");
     }
-    
+
     AMX_LOG(AMX_DEBUG,'');
-    
+
 	if(length_string(request.body)) {
 		AMX_LOG(AMX_DEBUG,"request.body");
 	}
-    
+
 	AMX_LOG(AMX_DEBUG,'----- END HTTP REQUEST -----');
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: httpResponseToString
 //
 // Parameters:
@@ -432,27 +432,27 @@ define_function httpRequestToDebug(HttpRequest request) {
 //
 // Description:
 //    Returns a HTTP response string from the data contained in the HttpResponse object parameter
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function char[HTTP_MAX_MESSAGE_LENGTH] httpResponseToString(HttpResponse response) {
     char http[1024];
     integer i;
-    
+
     http = "'HTTP/',format('%.1f',response.version),' ',itoa(response.status.code),' ',response.status.message,$0d,$0a"
-    
+
     for(i=1; i<=length_array(response.headers); i++) {
 		http = "http,response.headers[i].name,': ',response.headers[i].value,$0d,$0a";
     }
-    
+
     http = "http,$0d,$0a";
-    
+
     http = "http,response.body"
-    
+
     return http;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: httpResponseToDebug
 //
 // Parameters:
@@ -463,30 +463,30 @@ define_function char[HTTP_MAX_MESSAGE_LENGTH] httpResponseToString(HttpResponse 
 //
 // Description:
 //    Prints HTTP response to debug
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function httpResponseToDebug(HttpResponse response) {
     integer i;
-	
+
 	AMX_LOG(AMX_DEBUG,'----- BEGIN HTTP RESPONSE -----');
-    
+
     AMX_LOG(AMX_DEBUG,"'HTTP/',format('%.1f',response.version),' ',itoa(response.status.code),' ',response.status.message");
-    
+
     for(i=1; i<=length_array(response.headers); i++) {
 		AMX_LOG(AMX_DEBUG,"response.headers[i].name,': ',response.headers[i].value");
     }
-    
+
     AMX_LOG(AMX_DEBUG,'');
-    
+
 	if(length_string(response.body)) {
 		AMX_LOG(AMX_DEBUG,"response.body");
 	}
-	
+
 	AMX_LOG(AMX_DEBUG,'----- END HTTP RESPONSE -----');
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: httpSetHeader
 //
 // Parameters:
@@ -500,18 +500,18 @@ define_function httpResponseToDebug(HttpResponse response) {
 // Description:
 //    Adds HTTP header to array of HTTP headers. If HTTP header with matching name already exists in array the value
 //    of the existing HTTP header is overwritten.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function httpSetHeader(HttpHeader headers[], char name[], char value[]) {
 	integer i;
-	
+
 	for(i=1; i<=length_array(headers); i++) {
 		if(lower_string(headers[i].name) == lower_string(name)) {
 			headers[i].value = value;
 			return;
 		}
 	}
-	
+
 	if(length_array(headers) < max_length_array(headers)) {
 		set_length_array(headers,length_array(headers)+1);
 		headers[length_array(headers)].name = name;
@@ -520,7 +520,7 @@ define_function httpSetHeader(HttpHeader headers[], char name[], char value[]) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: httpGetHeader
 //
 // Parameters:
@@ -533,22 +533,22 @@ define_function httpSetHeader(HttpHeader headers[], char name[], char value[]) {
 //
 // Description:
 //    Searches for and returns the value of the first instances of a specified header in a HTTP headers array
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function char[1024] httpGetHeader(HttpHeader headers[], char name[]) {
 	integer i;
-	
+
 	for(i=1; i<=length_array(headers); i++) {
 		if(lower_string(headers[i].name) == lower_string(name)) {
 			return headers[i].value;
 		}
 	}
-	
+
 	return "";
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: httpGetHeaderValues
 //
 // Parameters:
@@ -562,11 +562,11 @@ define_function char[1024] httpGetHeader(HttpHeader headers[], char name[]) {
 // Description:
 //    Searches for any instances of a specified header in a HTTP headers array object and populates the provided values
 //    array
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function httpGetHeaderValues(HttpHeader headers[], char name[], char values[][]) {
 	integer i;
-	
+
 	for(i=1; i<=length_array(headers); i++) {
 		if(lower_string(headers[i].name) == lower_string(name)) {
 			if(length_array(values) == max_length_array(values)) {
@@ -579,13 +579,13 @@ define_function httpGetHeaderValues(HttpHeader headers[], char name[], char valu
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: httpRemoveHeader
 //
 // Parameters:
 //    HttpHeader[] headers       -   HTTP headers array
 //    char[] name                -   name of HTTP header
-//    integer removeAllMatches   -   boolean value indicating whether all instances of matching HTTP header should be 
+//    integer removeAllMatches   -   boolean value indicating whether all instances of matching HTTP header should be
 //                                   removed
 //
 // Returns:
@@ -594,11 +594,11 @@ define_function httpGetHeaderValues(HttpHeader headers[], char name[], char valu
 // Description:
 //    Removes either the first instance of a specified HTTP header from a HTTP headers array object or all instances of
 //    the specified header, dependent on true / false indicator supplied
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function httpRemoveHeader(HttpHeader headers[], char name[], integer removeAllMatches) {
 	integer i;
-	
+
 	for(i=1; i<=length_array(headers); i++) {
 		if(lower_string(headers[i].name) == lower_string(name)) {
 			if(i==length_array(headers)) {
@@ -615,7 +615,7 @@ define_function httpRemoveHeader(HttpHeader headers[], char name[], integer remo
 				}
 				set_length_array(headers,j-1);
 			}
-			
+
 			if(!removeAllMatches) {
 				return;
 			} else {
@@ -626,7 +626,7 @@ define_function httpRemoveHeader(HttpHeader headers[], char name[], integer remo
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: httpHasHeader
 //
 // Parameters:
@@ -637,24 +637,24 @@ define_function httpRemoveHeader(HttpHeader headers[], char name[], integer remo
 //    integer   -   boolean (true/false) value indicating whether specified HTTP header was found
 //
 // Description:
-//    Searches HTTP header array for the existence of the specified HTTP header and returns a true/false value 
-//    depending on the result 
-// 
+//    Searches HTTP header array for the existence of the specified HTTP header and returns a true/false value
+//    depending on the result
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function integer httpHasHeader(HttpHeader headers[], char name[]) {
 	integer i;
-	
+
 	for(i=1; i<=length_array(headers); i++) {
 		if(lower_string(headers[i].name) == lower_string(name)) {
 			return true;
 		}
 	}
-	
+
 	return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: httpGetHeaderNames
 //
 // Parameters:
@@ -665,7 +665,7 @@ define_function integer httpHasHeader(HttpHeader headers[], char name[]) {
 //
 // Description:
 //    Returns a list containing the names of all HTTP headers contained in the HTTP header array
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function char[20][100] httpGetHeaderNames(HttpHeader headers[]) {
 	#warn '@todo: implement httpGetHeaderNames method'
@@ -676,7 +676,7 @@ HTTP Authentication Header Functions
 */
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: httpBasicAuthentication
 //
 // Parameters:
@@ -688,40 +688,40 @@ HTTP Authentication Header Functions
 //
 // Description:
 //    Return the value for a HTTP Authentication header using basic authentication
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function char[1024] httpBasicAuthentication(char username[], char password[]) {
     stack_var char auth[1024];
-    
+
     auth = "'Basic ',base64Encode("username,':',password")"
-    
+
     return auth;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: httpDigestAuthentication
 //
 // Parameters:
 //    char[] method       -   digest method
 //    char[] requestUrl   -   request URI
-//    char[] realm        -   
+//    char[] realm        -
 //    char[] username     -   user name
 //    char[] password     -   password
-//    char[] nonce        -   
-//    char[] cnonce       -   
-//    char[] nc           -   
-//    char[] qop          -   
-//    char[] algorithm    -   
-//    char[] opaque       -   
-//    char[] entityBody   -  
+//    char[] nonce        -
+//    char[] cnonce       -
+//    char[] nc           -
+//    char[] qop          -
+//    char[] algorithm    -
+//    char[] opaque       -
+//    char[] entityBody   -
 //
 // Returns:
 //    char[]   -   HTTP authentication header value
 //
 // Description:
 //    Return the value for a HTTP Authentication header using digest authentication
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function char[1024] httpDigestAuthentication(char method[], char requestUri[], char realm[],
                                                     char username[], char password[],
@@ -731,7 +731,7 @@ define_function char[1024] httpDigestAuthentication(char method[], char requestU
     stack_var char HA1_hex[16], HA2_hex[16], response_hex[16];
     stack_var char HA1_str[32], HA2_str[32], response_str[32];
     stack_var char auth[1024];
-    
+
     if(cnonce == '') {
 		cnonce = "lower_string(hex(ltba(random_number($FFFFFFFF)))),lower_string(hex(ltba(random_number($FFFFFFFF))))";
 		nc = '00000001';
@@ -742,17 +742,17 @@ define_function char[1024] httpDigestAuthentication(char method[], char requestU
 		}
 		else {
 			stack_var long nc_val;
-			
+
 			nc_val = hextoi(nc);
 			nc_val++;
 			nc = itohex(nc_val);
-			
+
 			while(length_array(nc)<8) {
 			nc = "'0',nc";
 			}
 		}
     }
-    
+
     if((algorithm == '') || (upper_string(algorithm) == 'MD5')) {
 		HA1_hex = md5("username,':',realm,':',password");
 		HA1_str = lower_string(hex(HA1_hex));
@@ -761,7 +761,7 @@ define_function char[1024] httpDigestAuthentication(char method[], char requestU
 		HA1_hex = md5("md5("username,':',realm,':',password"),':',nonce,':',cnonce");
 		HA1_str = lower_string(hex(HA1_hex));
     }
-    
+
     if(qop == '') {
 		HA2_hex = md5("method,':',requestUri");
 		HA2_str = lower_string(hex(HA2_hex));
@@ -780,39 +780,39 @@ define_function char[1024] httpDigestAuthentication(char method[], char requestU
 		response_hex = md5("HA1_str,':',nonce,':',nc,':',cnonce,':','auth-int',':',HA2_str");
 		response_str = lower_string(hex(response_hex));
     }
-    
+
     auth = "'Digest username="',username,'", realm="',realm,'", nonce="',nonce,'", uri="',requestUri,'"'";
-    
+
     if(upper_string(algorithm) == 'MD5') {
 		auth =  "auth,', algorithm=MD5'"
     }
     else if(upper_string(algorithm) == 'MD5-SESS') {
 		auth =  "auth,', algorithm=MD5-sess'"
     }
-    
+
     auth =  "auth,', response="',response_str,'"'"
-    
+
     if(opaque != '') {
 		auth =  "auth,', opaque="',opaque,'"'"
     }
-    
+
     if(qop == 'auth' || find_string(lower_string(qop),'auth,',1)) {
 		auth =  "auth,', qop=auth'"
     }
     else if(find_string(lower_string(qop),'auth-int',1)) {
 		auth =  "auth,', qop=auth-int'"
     }
-    
+
     if(qop != '') {
 		auth =  "auth,', nc=',nc"
 		auth =  "auth,', cnonce="',cnonce,'"'"
     }
-    
+
     return auth;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: httpCopyRequest
 //
 // Parameters:
@@ -824,26 +824,26 @@ define_function char[1024] httpDigestAuthentication(char method[], char requestU
 //
 // Description:
 //    Makes a direct copy of a HTTP request object
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function httpCopyRequest(HttpRequest copyFrom, HttpRequest copyTo) {
 	integer i;
-	
+
 	copyTo.method = copyFrom.method;
 	copyTo.requestUri = copyFrom.requestUri;
 	copyTo.version = copyFrom.version;
-	
+
 	for(i=1; i<=length_array(copyFrom.headers); i++) {
 		copyTo.headers[i].name = copyFrom.headers[i].name;
 		copyTo.headers[i].value = copyFrom.headers[i].value;
 	}
 	set_length_array(copyTo.headers, length_array(copyFrom.headers));
-	
+
 	copyTo.body   = copyFrom.body;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: httpCopyResponse
 //
 // Parameters:
@@ -855,26 +855,26 @@ define_function httpCopyRequest(HttpRequest copyFrom, HttpRequest copyTo) {
 //
 // Description:
 //    Makes a direct copy of a HTTP response object
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function httpCopyResponse(HttpResponse copyFrom, HttpResponse copyTo) {
 	integer i;
-	
+
 	copyTo.version = copyFrom.version;
 	copyTo.status.code = copyFrom.status.code;
 	copyTo.status.message = copyFrom.status.message;
-	
+
 	for(i=1; i<=length_array(copyFrom.headers); i++) {
 		copyTo.headers[i].name = copyFrom.headers[i].name;
 		copyTo.headers[i].value = copyFrom.headers[i].value;
 	}
 	set_length_array(copyTo.headers, length_array(copyFrom.headers));
-	
+
 	copyTo.body   = copyFrom.body;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: httpInitRequest
 //
 // Parameters:
@@ -885,26 +885,26 @@ define_function httpCopyResponse(HttpResponse copyFrom, HttpResponse copyTo) {
 //
 // Description:
 //    Initializes a HTTP request and clears all stored values
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function httpInitRequest(HttpRequest request) {
 	integer i;
-	
+
 	request.method = '';
 	request.requestUri = '';
 	request.version = 0;
-	
+
 	for(i=1; i<=length_array(request.headers); i++) {
 		request.headers[i].name = '';
 		request.headers[i].value = '';
 	}
 	set_length_array(request.headers,0);
-	
+
 	request.body = '';
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: httpInitResponse
 //
 // Parameters:
@@ -915,21 +915,21 @@ define_function httpInitRequest(HttpRequest request) {
 //
 // Description:
 //    Initializes a HTTP response and clears all stored values
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function httpInitResponse(HttpResponse response) {
 	integer i;
-	
+
 	response.version = 0;
 	response.status.code = 0;
 	response.status.message = '';
-	
+
 	for(i=1; i<=length_array(response.headers); i++) {
 		response.headers[i].name = '';
 		response.headers[i].value = '';
 	}
 	set_length_array(response.headers,0);
-	
+
 	response.body = '';
 }
 

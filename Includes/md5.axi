@@ -103,13 +103,13 @@ define_function CHAR[16] md5(char msg[]) {
 	long i;
 
 	chunk = mid_string(msgPadded,chunkIdx,MD5_BLOCK_SIZE_BYTES);
-	
+
 	i = 1;
 	for(mIdx=1; mIdx<=length_array(chunk); mIdx=mIdx+MD5_WORD_SIZE_BYTES) {
 	    char word[MD5_WORD_SIZE_BYTES];
 	    word = mid_string(chunk,mIdx,MD5_WORD_SIZE_BYTES);
 	    M[i] = ((word[4] << 24) BOR (word[3] << 16) BOR (word[2] << 8) BOR word[1])
-	    
+
 	    i++;
 	}
 

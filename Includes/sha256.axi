@@ -2,7 +2,7 @@ PROGRAM_NAME='sha256'
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Include: sha256
-// 
+//
 // Description:
 //
 //   - This include file provides a NetLinx implementation of the SHA-2 (Secure Hash Algorithm 2) cryptographic hash
@@ -10,10 +10,10 @@ PROGRAM_NAME='sha256'
 //
 // Implementation:
 //
-//   - Any NetLinx program utilising the sha256 include file must use either the INCLUDE or #INCLUDE keywords to 
-//     include the sha256 include file within the program. While the INCLUDE and #INCLUDE keywords are both 
-//     functionally equivalent the #INCLUDE keyword is recommended only because it is the NetLinx keyword (the 
-//     INCLUDE keyword is from the earlier Axcess programming language and is included within the NetLinx programming 
+//   - Any NetLinx program utilising the sha256 include file must use either the INCLUDE or #INCLUDE keywords to
+//     include the sha256 include file within the program. While the INCLUDE and #INCLUDE keywords are both
+//     functionally equivalent the #INCLUDE keyword is recommended only because it is the NetLinx keyword (the
+//     INCLUDE keyword is from the earlier Axcess programming language and is included within the NetLinx programming
 //     language for backwards compatibility).
 //
 //     E.g:
@@ -88,9 +88,9 @@ define_function CHAR[32] sha256(char msg[]) {
 	char msgPadded[1048576];
 
 	long h0, h1, h2, h3, h4, h5, h6, h7;
-	
+
 	long k[64];
-	
+
 	long ml; // message length in bits
 	long L; // length (in 32-bit integers)
 	long kZeros;
@@ -100,30 +100,30 @@ define_function CHAR[32] sha256(char msg[]) {
 	integer i;
 	integer n;
 	integer t;
-	
+
 	long s0, s1;
 
 	long a, b, c, d, e, f, g, h;
-	
+
 	long ch;
 	long temp1, temp2;
 	long maj;
 
 	char M[SHA_256_BLOCK_SIZE_BYTES];
 	long W[64];
-	
+
 	long lenMsg;
-	
+
 	long lenMsgBytes;
 	long lenMsgBits;
 
 	long TEMP;
-	
+
 	char chunk[64]; // 512 bits
-	
+
 	////////////////////////////
 	// Initialize hash values //
-	h0 = $6a09e667;  
+	h0 = $6a09e667;
 	h1 = $bb67ae85;
 	h2 = $3c6ef372;
 	h3 = $a54ff53a;
@@ -131,7 +131,7 @@ define_function CHAR[32] sha256(char msg[]) {
 	h5 = $9b05688c;
 	h6 = $1f83d9ab;
 	h7 = $5be0cd19;
-	
+
 	/////////////////////////////////////////
 	// Initialize array of round constants //
 	k[1]  = $428a2f98;  k[2]  = $71374491;  k[3]  = $b5c0fbcf;  k[4]  = $e9b5dba5;
@@ -150,10 +150,10 @@ define_function CHAR[32] sha256(char msg[]) {
 	k[53] = $391c0cb3;  k[54] = $4ed8aa4a;  k[55] = $5b9cca4f;  k[56] = $682e6ff3;
 	k[57] = $748f82ee;  k[58] = $78a5636f;  k[59] = $84c87814;  k[60] = $8cc70208;
 	k[61] = $90befffa;  k[62] = $a4506ceb;  k[63] = $bef9a3f7;  k[64] = $c67178f2;
-	
+
 	//////////////////////////////
 	// Pre-processing (Padding) //
-	
+
 	//// begin with the original message of length L bits
 	L = length_array(msg) * SHA_256_BYTE_SIZE_BITS;
 	//// append a single '1' bit
@@ -166,15 +166,15 @@ define_function CHAR[32] sha256(char msg[]) {
 	}
 	//// append L as a 64-bit big-endian integer, making the total post-processed length a multiple of 512 bits
 	msgPadded = "msgPadded,$00,$00,$00,$00,ltba(L)";
-	
-	
+
+
 	//////////////////////////////////////////////////////
 	// Process the message in successive 512-bit chunks //
 
 	// break message into 512-bit chunks
 	// for each chunk
 	for(mIdx = 1; mIdx < length_array(msgPadded); mIdx=mIdx+SHA_256_BLOCK_SIZE_BYTES) {
-	
+
 	    // copy chunk into first 16 words w[0..15] of the message schedule array
 	    M = mid_string(msgPadded,mIdx,SHA_256_BLOCK_SIZE_BYTES);
 	    i = 1;
@@ -184,14 +184,14 @@ define_function CHAR[32] sha256(char msg[]) {
 		    W[i] = binaryToLong(binary);
 		    i++;
 	    }
-	    
+
 	    // Extend the first 16 words into the remaining 48 words w[16..63] of the message schedule array:
 	    for(t = 17; t <= 64; t++) {
 		s0 = (lcrs(W[t-15],7) BXOR lcrs(W[t-15],18) BXOR (W[t-15] >> 3));
 		s1 = (lcrs(W[t-2],17) BXOR lcrs(W[t-2],19) BXOR (W[t-2] >> 10));
 		W[t] = W[t-16] + s0 + W[t-7] + s1;
 	    }
-	    
+
 	    // Initialize working variables to current hash value:
 	    a = h0;
 	    b = h1;
@@ -201,7 +201,7 @@ define_function CHAR[32] sha256(char msg[]) {
 	    f = h5;
 	    g = h6;
 	    h = h7;
-	    
+
 	    // Compression function main loop:
 	    for(i=1; i<=64; i++) {
 		s1 = lcrs(e,6) bxor lcrs(e,11) bxor lcrs(e,25);
@@ -210,7 +210,7 @@ define_function CHAR[32] sha256(char msg[]) {
 		s0 = lcrs(a,2) bxor lcrs(a,13) bxor lcrs(a,22);
 		maj = (a band b) bxor (a band c) bxor (b band c);
 		temp2 = s0 + maj;
-		
+
 		h = g;
 		g = f;
 		f = e;
@@ -220,7 +220,7 @@ define_function CHAR[32] sha256(char msg[]) {
 		b = a;
 		a = temp1 + temp2;
 	    }
-	    
+
 	    // Add the compressed chunk to the current hash value:
 	    h0 = h0 + a;
 	    h1 = h1 + b;
@@ -231,10 +231,10 @@ define_function CHAR[32] sha256(char msg[]) {
 	    h6 = h6 + g;
 	    h7 = h7 + h;
 	}
-	
+
 	// Produce the final hash value (big-endian):
 	digest = "ltba(h0),ltba(h1),ltba(h2),ltba(h3),ltba(h4),ltba(h5),ltba(h6),ltba(h7)"
-	
+
 	return digest;
 }
 

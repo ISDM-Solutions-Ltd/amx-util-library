@@ -2,18 +2,18 @@ PROGRAM_NAME='binary'
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Include: binary
-// 
+//
 // Description:
 //
-//   - This include file provides functions for working with binary values larger than the typical CHAR, INTEGER, or 
+//   - This include file provides functions for working with binary values larger than the typical CHAR, INTEGER, or
 //     LONG data types and for converting between smaller data types and binary formatted ASCII strings (e.g., '10011')
 //
 // Implementation:
 //
-//   - Any NetLinx program utilising the binary include file must use either the INCLUDE or #INCLUDE keywords to 
-//     include the binary include file within the program. While the INCLUDE and #INCLUDE keywords are both 
-//     functionally equivalent the #INCLUDE keyword is recommended only because it is the NetLinx keyword (the INCLUDE 
-//     keyword is from the earlier Axcess programming language and is included within the NetLinx programming language 
+//   - Any NetLinx program utilising the binary include file must use either the INCLUDE or #INCLUDE keywords to
+//     include the binary include file within the program. While the INCLUDE and #INCLUDE keywords are both
+//     functionally equivalent the #INCLUDE keyword is recommended only because it is the NetLinx keyword (the INCLUDE
+//     keyword is from the earlier Axcess programming language and is included within the NetLinx programming language
 //     for backwards compatibility).
 //
 //     E.g:
@@ -28,7 +28,7 @@ PROGRAM_NAME='binary'
 #DEFINE __BINARY__
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: charToBinary
 //
 // Parameters:
@@ -39,7 +39,7 @@ PROGRAM_NAME='binary'
 //
 // Description:
 //    Converts a char value into a binary formatted ASCII string representing a char.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function char[8] charToBinary(char c) {
 	stack_var char b7, b6, b5, b4, b3, b2, b1, b0;
@@ -57,7 +57,7 @@ define_function char[8] charToBinary(char c) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: binaryToChar
 //
 // Parameters:
@@ -68,7 +68,7 @@ define_function char[8] charToBinary(char c) {
 //
 // Description:
 //    Converts a binary formatted ASCII string representing a char to a char.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function char binaryToChar(char binary[8]) {
 	stack_var char result;
@@ -86,7 +86,7 @@ define_function char binaryToChar(char binary[8]) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: longToBinary
 //
 // Parameters:
@@ -97,7 +97,7 @@ define_function char binaryToChar(char binary[8]) {
 //
 // Description:
 //    Converts a long value into a binary formatted ASCII string representing a long.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function char[32] longToBinary(long val) {
 	stack_var char result[32];
@@ -106,12 +106,12 @@ define_function char[32] longToBinary(long val) {
 	result = "result,charToBinary(type_cast((val & $FF0000) >> 16))";
 	result = "result,charToBinary(type_cast((val & $FF00) >> 8))";
 	result = "result,charToBinary(type_cast((val & $FF)))";
-	
+
 	return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: binaryToLong
 //
 // Parameters:
@@ -122,7 +122,7 @@ define_function char[32] longToBinary(long val) {
 //
 // Description:
 //    Converts a binary formatted ASCII string representing a long to a long.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function long binaryToLong(char binary[32]) {
 	stack_var long result;
@@ -136,7 +136,7 @@ define_function long binaryToLong(char binary[32]) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: binaryToString
 //
 // Parameters:
@@ -148,7 +148,7 @@ define_function long binaryToLong(char binary[32]) {
 // Description:
 //    Converts a character array containing a binary formatted ASCII string representing the raw value to a character
 //    array containing the raw values.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function char[1048576] binaryToString(char binary[]) {
 	stack_var char result[1048576];
@@ -156,13 +156,13 @@ define_function char[1048576] binaryToString(char binary[]) {
 
 	for(i=1; i < length_array(binary); i=i+8) {
 		result = "result,binaryToChar(mid_string(binary,i,8))"
-	}	
+	}
 
 	return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: stringToBinary
 //
 // Parameters:
@@ -173,7 +173,7 @@ define_function char[1048576] binaryToString(char binary[]) {
 //
 // Description:
 //    Converts a character array to a binary formatted ASCII string representing the raw value.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function char[1048576] stringToBinary(char str[]) {
 	stack_var char result[1048576];
@@ -182,12 +182,12 @@ define_function char[1048576] stringToBinary(char str[]) {
 	for(i = 1; i <= length_string(str); i++) {
 		result = "result,charToBinary(str[i])"
 	}
-	
+
 	return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: leftRotateString
 //
 // Parameters:
@@ -199,7 +199,7 @@ define_function char[1048576] stringToBinary(char str[]) {
 // Description:
 //    Does a bitwise rotation on a character array 1 position to the left. MSB is moved to the LSB and everything else
 //    it bit-shifted 1 place to the left.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function char[1048576] leftRotateString(char msg[]) {
 	stack_var char result[1048576];
@@ -207,7 +207,7 @@ define_function char[1048576] leftRotateString(char msg[]) {
 	stack_var char leftMostBitVal;
 
 	leftMostBitVal = type_cast((msg[1] & 128) >> 7);
-	
+
 	for(i = 1; i <= length_array(msg); i++) {
 		if(i != length_array(msg)) {
 			result[i] =  type_cast((msg[i] << 1) | ((msg[i+1] & 128) >> 7));
@@ -222,7 +222,7 @@ define_function char[1048576] leftRotateString(char msg[]) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: rightRotateString
 //
 // Parameters:
@@ -234,7 +234,7 @@ define_function char[1048576] leftRotateString(char msg[]) {
 // Description:
 //    Does a bitwise rotation on a character array 1 position to the right. LSB is moved to the MSB and everything else
 //    it bit-shifted 1 place to the right.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function char[1048576] rightRotateString(char msg[]) {
 	stack_var char result[1048576];
@@ -242,7 +242,7 @@ define_function char[1048576] rightRotateString(char msg[]) {
 	stack_var char rightMostBitVal;
 
 	rightMostBitVal = type_cast((msg[length_string(msg)] & 1));
-	
+
 	for(i = length_array(msg); i >= 1; i--) {
 		if(i != 1) {
 			result[i] =  type_cast((msg[i] >> 1) | ((msg[i-1] & 1) << 7));

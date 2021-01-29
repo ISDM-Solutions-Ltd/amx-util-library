@@ -2,7 +2,7 @@ program_name='base64'
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Include: base64
-// 
+//
 // Description:
 //
 //    - This include file provides a NetLinx implementation of the base64 encoding scheme as defined in RFC 4648 (see
@@ -10,10 +10,10 @@ program_name='base64'
 //
 // Implementation:
 //
-//   - Any NetLinx program utilising the base64 include file must use either the INCLUDE or #INCLUDE keywords to 
-//     include the base64 include file within the program. While the INCLUDE and #INCLUDE keywords are both 
+//   - Any NetLinx program utilising the base64 include file must use either the INCLUDE or #INCLUDE keywords to
+//     include the base64 include file within the program. While the INCLUDE and #INCLUDE keywords are both
 //     functionally equivalent the #INCLUDE keyword is recommended only because it is the NetLinx keyword (the INCLUDE
-//     keyword is from the earlier Axcess programming language and is included within the NetLinx programming language 
+//     keyword is from the earlier Axcess programming language and is included within the NetLinx programming language
 //     for backwards compatibility).
 //
 //     E.g:
@@ -43,17 +43,17 @@ char BASE64_PAD = '=';
 define_function char base64ReverseAlphabetLookup(char encodedVal)
 {
 	char c;
-	
+
 	for(c=1; c<=64; c++)
 	{
-		
+
 		if(encodedVal == BASE64_ALPHABET[c])
 		{
-			
+
 			return c-1;
 		}
 	}
-	
+
 	return 0;
 }
 
@@ -68,7 +68,7 @@ define_function char base64UrlAlphabetLookup(char val) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: base64Encode
 //
 // Parameters:
@@ -79,7 +79,7 @@ define_function char base64UrlAlphabetLookup(char val) {
 //
 // Description:
 //    Encodes the data provided using base64 encoding (as defined in RFC 4648).
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function char[1024] base64Encode(char data[]) {
 	char encodedData[1024];
@@ -118,11 +118,11 @@ define_function char[1024] base64Encode(char data[]) {
 		encodedData = "encodedData,BASE64_PAD";
 	}
 
-	return encodedData;	
+	return encodedData;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: base64UrlEncode
 //
 // Parameters:
@@ -133,7 +133,7 @@ define_function char[1024] base64Encode(char data[]) {
 //
 // Description:
 //    Encodes the data provided using base64 URL encoding (as defined in RFC 4648).
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function char[1024] base64UrlEncode(char data[], integer pad) {
 	char encodedData[1024];
@@ -174,7 +174,7 @@ define_function char[1024] base64UrlEncode(char data[], integer pad) {
 		}
 	}
 
-	return encodedData;	
+	return encodedData;
 }
 
 define_function char[1024] base64Decode(char encodedData[]) {
@@ -182,18 +182,18 @@ define_function char[1024] base64Decode(char encodedData[]) {
 	char vals6Bit[4];
 	integer i;
 	char bytes[3];
-	
-	
+
+
 	// base64 encoded data consists of 8-bit (byte) ASCII characters
 	// each of these character represents a 6-bit value
 	// we need to translate each encoded byte into a 6-bit value
 	// and "stich" all the 6-bit values together and then "chop" the result
 	// into 8-bit (byte) values to get the decoded data.
-	
+
 	//send_string 0, "'base64Decode()..start the decode process'";
 	for(i=1; i<=length_array(encodedData); i=i+4)
 	{
-		
+
 		if((encodedData[i+2] == '=') && (encodedData[i+3] == '=')) {
 			vals6Bit[1] = base64ReverseAlphabetLookup(encodedData[i]);
 			vals6Bit[2] = base64ReverseAlphabetLookup(encodedData[i+1]);
@@ -224,7 +224,7 @@ define_function char[1024] base64Decode(char encodedData[]) {
 			decodedData = "decodedData,bytes"
 		}
 	}
-	
+
 	return decodedData;
 }
 

@@ -21,7 +21,7 @@ Note that this implementation is far from complete.
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // Function: jwt
 //
 // Parameters:
@@ -35,19 +35,19 @@ Note that this implementation is far from complete.
 //
 // Description:
 //    Returns a JSON Web Token (JWT) - see RFC7519 / RFC7797
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 define_function char[1024] jwt(char header[], char payload[], char secret[], integer base64EncodeSecret, integer ignoreWhiteSpace) {
     char signature[1024];
 	char alg[20];
 	char tempHeader[1024];
-	
+
 	if(ignoreWhiteSpace) {
 		header = jsonRemoveWhiteSpace(header);
 		payload = jsonRemoveWhiteSpace(payload);
 		secret = jsonRemoveWhiteSpace(secret);
 	}
-	
+
 	tempHeader = header;
 	if(!find_string(tempHeader,"'"alg"'",1)) {
 		//send_string 0, "'Unable to build JWT. Algorithm not specified.'"
@@ -57,11 +57,11 @@ define_function char[1024] jwt(char header[], char payload[], char secret[], int
 	remove_string(tempHeader,"'"'",1);
 	alg = remove_string(tempHeader,"'"'",1);
 	alg = left_string(alg,length_string(alg)-1);
-	
+
 	switch(upper_string(alg)) {
 		case 'HS256': {
 			signature = hmac('sha256',"base64UrlEncode(header,false), '.', base64UrlEncode(payload,false)", secret);
-			
+
 			return "base64UrlEncode(header,false), '.', base64UrlEncode(payload,false), '.', base64UrlEncode(signature,false)";
 		}
 		default: {
