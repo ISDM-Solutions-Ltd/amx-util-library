@@ -269,14 +269,14 @@ define_function char[JSON_MAX_VALUE_DATA_LENGTH] jsonRemoveWhiteSpace(char jsonS
 define_function integer jsonParseArray(char jsonArrayStr[], JsonArray jArr) {
 	char tempJson[JSON_MAX_VALUE_DATA_LENGTH];
 	integer invalidJson;
-	integer i, j;
+	integer i;
 
-	AMX_LOG(AMX_DEBUG,'json::jsonParseArray');
+	AMX_LOG(AMX_DEBUG,'json::jsonParseArray CALLED');
 
 	AMX_LOG(AMX_DEBUG,"'json::jsonParseArray:Length of JSON string = ',itoa(length_array(jsonArrayStr))");
 
 	tempJson = jsonRemoveWhiteSpace(jsonArrayStr);
-	AMX_LOG_LONG_STRING(AMX_DEBUG,"'json::jsonParseArray: ',tempJson");
+	AMX_LOG_LONG_STRING(AMX_DEBUG,"'json::jsonParseArray:tempJson = ',tempJson");
 
 	if(length_string(jsonArrayStr) < 2) {
 		return false;
@@ -293,10 +293,13 @@ define_function integer jsonParseArray(char jsonArrayStr[], JsonArray jArr) {
 		}
 	}
 	else {
+		AMX_LOG(AMX_DEBUG,'json::jsonParseArray:Returning false - invalid array string');
 		return false;
 	}
 
 	for(i=1; i<=max_length_array(jArr.elements); i++) {
+		integer j;
+
 		if(find_string(tempJson,'true',1) == 1) { // boolean true
 			jArr.elements[i].type = JSON_TYPE_BOOLEAN;
 			jArr.elements[i].value = 'true';
@@ -490,7 +493,7 @@ define_function integer jsonParseArray(char jsonArrayStr[], JsonArray jArr) {
 	else {
 		set_length_array(jArr.elements,i);
 		AMX_LOG(AMX_DEBUG,"'json::jsonParseArray:Returning true JSON array contains ',itoa(i),' type:value elements'");
-		return true;
+		return i;
 	}
 
 }
@@ -498,11 +501,11 @@ define_function integer jsonParseArray(char jsonArrayStr[], JsonArray jArr) {
 define_function integer jsonParseObject(char jsonObjStr[], JsonObj jObj) {
 	char tempJson[JSON_MAX_VALUE_DATA_LENGTH];
 	char name[JSON_MAX_VALUE_NAME_LENGTH];
+	integer invalidJson;
 	integer i;
 
-	integer invalidJson;
 
-	AMX_LOG(AMX_DEBUG,'json::jsonParseObject');
+	AMX_LOG(AMX_DEBUG,'json::jsonParseObject CALLED');
 
 	AMX_LOG(AMX_DEBUG,"'json::jsonParseObject:Length of JSON string = ',itoa(length_array(jsonObjStr))");
 
@@ -728,7 +731,7 @@ define_function integer jsonParseObject(char jsonObjStr[], JsonObj jObj) {
 	else {
 		set_length_array(jObj.pairs,i);
 		AMX_LOG(AMX_DEBUG,"'json::jsonParseObj:Returning true JSON object contains ',itoa(i),' name:value pairs'");
-		return true;
+		return i;
 	}
 }
 
